@@ -8,7 +8,7 @@ import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
 import AdminRoute from "./routes/AdminRoute";
 import AdminLayout from "./pages/admin/AdminLayout";
-import AddDomain from "./pages/admin/AddDomain";
+import AddDomain from "./pages/admin/AddDomainForm";
 import AdminOverview from "./pages/admin/Overview";
 import Overview from "./pages/admin/Overview";
 import MyDashboard from "./pages/MyDashboard";
@@ -16,8 +16,13 @@ import AllDomains from "./pages/admin/AllDomains";
 import EditDomain from "./pages/admin/EditDomain";
 import AddTopic from "./pages/admin/AddTopic";
 import TopicsList from "./pages/admin/TopicsList";
+import AddNote from "./pages/admin/AddNote";
+import TopicDetail from "./pages/admin/TopicDetails";
+import AddInterviewQuestion from "./pages/admin/AddInterViewQuestions";
+import AddAssessment from "./pages/admin/AddAssessment";
+import AddProject from "./pages/admin/AddProject";
 const router = createBrowserRouter([
-  { 
+  {
     path: "/",
     element: <App />,
   },
@@ -53,14 +58,34 @@ const router = createBrowserRouter([
         element: <AllDomains />,
       },
       { path: "edit-domain/:id", element: <EditDomain /> },
-       {
-      path: "domains/:domainId/topics",
-      element: <TopicsList /> 
-    },
-    
+      {
+        path: "domains/:domainId/topics",
+        element: <TopicsList />,
+      },
+
       {
         path: "domains/:domainId/add-topic",
         element: <AddTopic />,
+      },
+      {
+        path: "domains/:domainId/topics/:topicId/add-note",
+        element: <AddNote />,
+      },
+      {
+        path: "domains/:domainId/topics/:topicId",
+        element: <TopicDetail />,
+      },
+      {
+        path: "domains/:domainId/topics/:topicId/add-question",
+        element: <AddInterviewQuestion />,
+      },
+      {
+        path: "domains/:domainId/topics/:topicId/add-assessment",
+        element: <AddAssessment />,
+      },
+      {
+        path: "domains/:domainId/add-project",
+        element: <AddProject />,
       },
     ],
   },
@@ -69,4 +94,3 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <RouterProvider router={router} />
 );
-

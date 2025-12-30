@@ -31,9 +31,9 @@ const MyDashboard = () => {
       <section className="bg-amber-500 rounded-lg p-3 w-[20%] flex flex-col items-start justify-between">
         <nav className="flex flex-col gap-3">
           <Link className="text-blue hover:underline" to="/dashboard">Overview</Link>
-          <Link className="text-blue hover:underline" to="/dashboard/adddomain">AddDomain</Link>
-           <Link className="text-blue hover:underline" to="/dashboard/alldomains">AllDomains</Link>
+           <Link className="text-blue hover:underline" to="/dashboard/alldomains">DomainsList</Link>
           <Link className="text-blue hover:underline" to="/dashboard/settings">Settings</Link>
+
         </nav>
         <Button
           disabled={isLoggingOut ? true : false}

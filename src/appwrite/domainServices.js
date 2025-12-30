@@ -1,62 +1,42 @@
-import { Databases, Storage, ID } from "appwrite";
-import appwriteClient from ".";
+import AppwriteTablesDB from "./AppWriteTableDB";
+
+const appwrite = new AppwriteTablesDB();
 
 class DomainService {
-  constructor() {
-    this.databases = new Databases(appwriteClient);
-    this.storage = new Storage(appwriteClient);
+  uploadDomainImage(file) {
+    return appwrite.uploadFile(file);
   }
 
-  // Upload image
-  async uploadDomainImage(file) {
-    return await this.storage.createFile(
-      import.meta.env.VITE_APPWRITE_BUCKET_ID,
-      ID.unique(),
-      file
+  createDomain(data) {
+    return appwrite.createRow(
+      import.meta.env.VITE_APPWRITE_Domains_TABLE_ID,
+      data
     );
   }
-  async getDomainById(id) {
-    return await this.databases.getDocument(
-      import.meta.env.VITE_APPWRITE_DB_ID,
+
+  getAllDomains() {
+    return appwrite.listRows(
+      import.meta.env.VITE_APPWRITE_Domains_TABLE_ID
+    );
+  }
+
+  getDomainById(id) {
+    return appwrite.getRow(
       import.meta.env.VITE_APPWRITE_Domains_TABLE_ID,
       id
     );
   }
 
-  // 🔥 ADD THIS METHOD (VERY IMPORTANT)
+  updateDomain(id, data) {
+    return appwrite.updateRow(
+      import.meta.env.VITE_APPWRITE_Domains_TABLE_ID,
+      id,
+      data
+    );
+  }
+
   getImagePreview(imageId) {
-    return this.storage.getFileView(
-      import.meta.env.VITE_APPWRITE_BUCKET_ID,
-      imageId
-    );
-  }
-
-  // Create domain
-  async createDomain(data) {
-    return await this.databases.createDocument(
-      import.meta.env.VITE_APPWRITE_DB_ID,
-      import.meta.env.VITE_APPWRITE_Domains_TABLE_ID,
-      ID.unique(),
-      data
-    );
-  }
-
-  // Get all domains
-  async getAllDomains() {
-    return await this.databases.listDocuments(
-      import.meta.env.VITE_APPWRITE_DB_ID,
-      import.meta.env.VITE_APPWRITE_Domains_TABLE_ID
-    );
-  }
-
-  // Update domain
-  async updateDomain(documentId, data) {
-    return await this.databases.updateDocument(
-      import.meta.env.VITE_APPWRITE_DB_ID,
-      import.meta.env.VITE_APPWRITE_Domains_TABLE_ID,
-      documentId,
-      data
-    );
+    return appwrite.getFilePreview(imageId);
   }
 }
 
