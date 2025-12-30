@@ -1,8 +1,8 @@
+import TopicServices from "@/src/appwrite/TopicServices";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import TopicService from "@/src/appwrite/topicServices";
 
-const topicService = new TopicService();
+const topicService = new TopicServices();
 
 const AddTopic = () => {
   const { domainId } = useParams();
