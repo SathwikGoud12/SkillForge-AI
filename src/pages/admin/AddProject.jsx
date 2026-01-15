@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import ProjectService from "@/src/appwrite/ProjectService";
 import TopicServices from "@/src/appwrite/TopicServices";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const projectService = new ProjectService();
 const topicService = new TopicServices();
@@ -9,6 +10,7 @@ const topicService = new TopicServices();
 const AddProject = () => {
   const navigate = useNavigate();
   const { domainId } = useParams();
+  const queryClient = useQueryClient();
 
   const [topics, setTopics] = useState([]);
   const [topicId, setTopicId] = useState("");
@@ -18,38 +20,43 @@ const AddProject = () => {
   const [techStack, setTechStack] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
   const [liveUrl, setLiveUrl] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  async function fetchTopics() {
+    const res = await topicService.getTopicsByDomain(domainId);
+    setTopics(res.rows || []);
+  }
 
   useEffect(() => {
-    async function fetchTopics() {
-      const res = await topicService.getTopicsByDomain(domainId);
-      setTopics(res.rows || []);
-    }
     fetchTopics();
   }, [domainId]);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await projectService.createProject({
-        title,
-        description,
-        techStack,
-        githubUrl,
-        liveUrl,
-        topicId,
-      });
-
+  const mutation = useMutation({
+    mutationFn: (data) => projectService.createProject(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects", domainId] });
       alert("Project added successfully");
-      navigate(-1);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to add project");
-    } finally {
-      setLoading(false);
-    }
+        navigate(
+    `/dashboard/domains/${domainId}/topics/${topicId}`,
+    { replace: true })
+    },
+    onError: (error) => {
+      alert("Cannot add project");
+      console.error(error);
+    },
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    mutation.mutate({
+      title,
+      description,
+      techStack,
+      githubUrl,
+      liveUrl,
+      topicId,
+      domainId,
+    });
   }
 
   return (
@@ -75,7 +82,7 @@ const AddProject = () => {
 
         <input
           className="w-full border p-2 rounded"
-          placeholder="Tech Stack (React, HTML, CSS)"
+          placeholder="Tech Stack"
           value={techStack}
           onChange={(e) => setTechStack(e.target.value)}
         />
@@ -109,10 +116,10 @@ const AddProject = () => {
         </select>
 
         <button
-          disabled={loading}
+          disabled={mutation.isPending}
           className="w-full bg-black text-white py-2 rounded"
         >
-          {loading ? "Saving..." : "Add Project"}
+          {mutation.isPending ? "Saving..." : "Add Project"}
         </button>
       </form>
     </div>

@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DomainService from "@/src/appwrite/domainServices";
 import { useNavigate } from "react-router";
-
 import {
   Dialog,
   DialogContent,
@@ -9,29 +8,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Button } from "@/components/ui/button";
 import AddDomainForm from "./AddDomainForm";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const domainService = new DomainService();
 
 const AllDomains = () => {
-  const [domains, setDomains] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  async function fetchDomains() {
-    try {
-      const res = await domainService.getAllDomains();
-      setDomains(res.rows || []);
-    } catch (err) {
-      console.error("Failed to fetch domains", err);
-    } finally {
-      setLoading(false);
-    }
+  const fetchDomains=async()=>{
+ const res = await domainService.getAllDomains();
+ return res.rows || []
   }
+  const {
+    data: domains = [],
+    isPending,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["domains"],
+    queryFn: fetchDomains
+  });
 
   async function toggleDomain(e, domain) {
     e.stopPropagation();
@@ -40,11 +40,7 @@ const AllDomains = () => {
       isActive: !domain.isActive,
     });
 
-    setDomains((prev) =>
-      prev.map((d) =>
-        d.$id === domain.$id ? { ...d, isActive: !d.isActive } : d
-      )
-    );
+    queryClient.invalidateQueries({ queryKey: ["domains"] });
   }
 
   function handleEdit(e, id) {
@@ -52,12 +48,12 @@ const AllDomains = () => {
     navigate(`/dashboard/edit-domain/${id}`);
   }
 
-  useEffect(() => {
-    fetchDomains();
-  }, []);
-
-  if (loading) {
+  if (isPending) {
     return <p className="text-center mt-10">Loading domains...</p>;
+  }
+
+  if (isError) {
+    return <p className="text-red-500">{error.message}</p>;
   }
 
   return (
@@ -65,7 +61,6 @@ const AllDomains = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">All Domains</h2>
 
-        
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>+ Add Domain</Button>
@@ -77,14 +72,15 @@ const AllDomains = () => {
             </DialogHeader>
 
             <AddDomainForm
-              onSuccess={fetchDomains}
-              onClose={() => setOpen(false)}
+              onSuccess={() => {
+                queryClient.invalidateQueries({ queryKey: ["domains"] });
+                setOpen(false);
+              }}
             />
           </DialogContent>
         </Dialog>
       </div>
 
-    
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {domains.map((domain) => (
           <div

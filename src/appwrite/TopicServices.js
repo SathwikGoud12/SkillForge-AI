@@ -10,7 +10,6 @@ class TopicServices {
     return db.createRow(TOPICS_TABLE_ID, data);
   }
 
-  // ✅ Topic list inside a domain
   async getTopicsByDomain(domainId) {
     return db.listRows(
       TOPICS_TABLE_ID,
