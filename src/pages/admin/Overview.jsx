@@ -33,7 +33,6 @@ const AdminOverview = () => {
   const [userGrowth, setUserGrowth] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ useCallback prevents re-render loops
   const fetchAdminStats = useCallback(async () => {
     try {
       const [
@@ -52,7 +51,6 @@ const AdminOverview = () => {
         progressService.getAllProgress(),
       ]);
 
-      /* ================= KPI ================= */
       const rows = progressRes?.rows || [];
 
       const uniqueUsers = new Set(rows.map(r => r.userId));
@@ -66,7 +64,6 @@ const AdminOverview = () => {
         activeUsers: uniqueUsers.size,
       });
 
-      /* ================= USER GROWTH ================= */
       const monthlyMap = {};
 
       rows.forEach(row => {
@@ -79,7 +76,6 @@ const AdminOverview = () => {
         monthlyMap[month] = (monthlyMap[month] || 0) + 1;
       });
 
-      // Sort months correctly
       const chartData = MONTH_ORDER
         .filter(month => monthlyMap[month])
         .map(month => ({
@@ -107,7 +103,7 @@ const AdminOverview = () => {
     <div className="p-6 space-y-8">
       <h1 className="text-3xl font-bold">Admin Overview</h1>
 
-      {/* ================= KPI CARDS ================= */}
+    
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard title="Total Domains" value={stats.domains} />
         <StatCard title="Total Topics" value={stats.topics} />
@@ -120,6 +116,7 @@ const AdminOverview = () => {
       <UserGrowthChart data={userGrowth} />
 
       <AdminContentHealth/>
+
     </div>
   );
 };

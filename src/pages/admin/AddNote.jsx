@@ -1,38 +1,49 @@
 import NotesServices from "@/src/appwrite/NotesServices";
+import {
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import {useNavigate, useParams } from "react-router";
 
 const AddNote = () => {
   const noteService = new NotesServices();
   const navigate = useNavigate();
-  const {domainId,topicId}=useParams();
-
+  const queryClient = useQueryClient();
+  const { domainId, topicId } = useParams();
   const [title, setTitle] = useState("");
   const [explanation, setExplanation] = useState("");
   const [codeExample, setCodeExample] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [order, setOrder] = useState(0);
-  const [loading, setLoading] = useState(false);
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await noteService.createNote({
-        title,
-        explanation,
-        codeExample,
-        youtubeUrl,
-        topicId,
-        order: Number(order),
-      });
-      alert("Note Added Successfully")
-      navigate(`/dashboard/domains/${domainId}/topics/${topicId}`)
-    } catch (error) {
-      console.error(error);
-    }finally{
-        setLoading(false);
-    }
+  
+  const createNotes=async(noteData)=>{
+return noteService.createNote(noteData)
   }
+  const mutation = useMutation({
+    mutationFn: createNotes,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes", topicId] });
+      alert("Note Added Successfully");
+      navigate(`/dashboard/domains/${domainId}/topics/${topicId}`);
+    },
+    onError:(error)=>{
+      console.log(error)
+      alert("Failed to add Notes")
+    }
+  });
+   function handleSubmit(e) {
+    e.preventDefault();
+      mutation.mutate({
+     title,
+      explanation,
+      codeExample,
+      youtubeUrl,
+      order: Number(order),
+      topicId,
+  })
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold mb-6">Add Note</h2>
@@ -92,12 +103,12 @@ const AddNote = () => {
         </div>
 
         <button
-          disabled={loading}
+          disabled={mutation.isPending}
           className={`w-full py-2 rounded text-white font-semibold ${
-            loading ? "bg-gray-400" : "bg-black hover:bg-gray-800"
+            mutation.isPending ? "bg-gray-400" : "bg-black hover:bg-gray-800"
           }`}
         >
-          {loading ? "Saving..." : "Add Note"}
+          {mutation.isPending ? "Saving..." : "Add Note"}
         </button>
       </form>
     </div>

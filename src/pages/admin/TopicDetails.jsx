@@ -297,7 +297,9 @@ setProjects(projectRes.rows || []);
 
       <button
         onClick={() =>
-          navigate(`/dashboard/domains/${domainId}/add-project`)
+          navigate(
+            `/dashboard/domains/${domainId}/topics/${topicId}/add-project`
+          )
         }
         className="px-4 py-2 bg-black text-white rounded"
       >
@@ -312,12 +314,7 @@ setProjects(projectRes.rows || []);
         {projects.map((project) => (
           <div
             key={project.$id}
-            onClick={() =>
-              navigate(
-                `/dashboard/domains/${domainId}/topics/${project.topicId}`
-              )
-            }
-            className="border p-4 rounded cursor-pointer hover:bg-gray-50"
+            className="border p-4 rounded bg-white shadow"
           >
             <h3 className="font-semibold">{project.title}</h3>
             <p className="text-sm text-gray-600">
@@ -329,7 +326,6 @@ setProjects(projectRes.rows || []);
                 <a
                   href={project.githubUrl}
                   target="_blank"
-                  onClick={(e) => e.stopPropagation()}
                   className="text-blue-600"
                 >
                   GitHub
@@ -339,7 +335,6 @@ setProjects(projectRes.rows || []);
                 <a
                   href={project.liveUrl}
                   target="_blank"
-                  onClick={(e) => e.stopPropagation()}
                   className="text-green-600"
                 >
                   Live
@@ -354,7 +349,7 @@ setProjects(projectRes.rows || []);
 )}
 
 
-    </div>
+ </div>
   );
 };
 

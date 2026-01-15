@@ -42,7 +42,7 @@ const AdminContentHealth = () => {
       const assessments = assessmentsRes.rows || [];
       const progress = progressRes.rows || [];
 
-      // -------- Topics without Notes --------
+      
       const topicIdsWithNotes = new Set(notes.map(n => n.topicId));
       const noNotes = topics.filter(t => !topicIdsWithNotes.has(t.$id));
 
