@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ProjectService from "@/src/appwrite/ProjectService";
 import TopicServices from "@/src/appwrite/TopicServices";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 
 const projectService = new ProjectService();
 const topicService = new TopicServices();
@@ -35,9 +36,10 @@ const AddProject = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects", domainId] });
       alert("Project added successfully");
-        navigate(
-    `/dashboard/domains/${domainId}/topics/${topicId}`,
-    { replace: true })
+      navigate(
+        `/dashboard/domains/${domainId}/topics/${topicId}`,
+        { replace: true }
+      );
     },
     onError: (error) => {
       alert("Cannot add project");
