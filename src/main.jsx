@@ -3,7 +3,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register";
@@ -12,7 +12,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import AdminRoute from "./routes/AdminRoute";
 import MyDashboard from "./pages/MyDashboard";
 
-import AddDomain from "./pages/admin/AddDomainForm";
+import AddDomainForm from "./pages/admin/AddDomainForm";
 import Overview from "./pages/admin/Overview";
 import AllDomains from "./pages/admin/AllDomains";
 import EditDomain from "./pages/admin/EditDomain";
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Overview /> },
-      { path: "adddomain", element: <AddDomain /> },
+      { path: "adddomain", element: <AddDomainForm /> },
       { path: "alldomains", element: <AllDomains /> },
       { path: "edit-domain/:id", element: <EditDomain /> },
       { path: "domains/:domainId/topics", element: <TopicsList /> },
