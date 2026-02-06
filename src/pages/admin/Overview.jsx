@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 
-import DomainService from "@/src/appwrite/domainServices";
-import TopicServices from "@/src/appwrite/TopicServices";
-import NotesServices from "@/src/appwrite/NotesServices";
-import AssessmentService from "@/src/appwrite/AssessmentSevice";
-import ProjectService from "@/src/appwrite/ProjectService";
-import UserTopicProgressService from "@/src/appwrite/UserTopicProgressService";
+import DomainService from "@/appwrite/domainServices";
+import TopicServices from "@/appwrite/TopicServices";
+import NotesServices from "@/appwrite/NotesServices";
+import AssessmentService from "@/appwrite/AssessmentSevice";
+import ProjectService from "@/appwrite/ProjectService";
+import UserTopicProgressService from "@/appwrite/UserTopicProgressService";
 
 import StatCard from "./StatCard";
 import UserGrowthChart from "./UserGrowthChart";

@@ -1,0 +1,414 @@
+.solar-system-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: black;
+  overflow: hidden;
+  padding: 80px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solar-system-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 10;
+}
+
+.section-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #a8dadc, #4ecdc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -1px;
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  color: #a8dadc;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* Solar System */
+.solar-system {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  height: 900px;
+  margin: 0 auto 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stars Background */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* Sun - SkillForge Logo */
+.sun {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sun-core {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 0 40px rgba(139, 92, 246, 0.8),
+    0 0 80px rgba(139, 92, 246, 0.4),
+    inset 0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+.sun-glow {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+.logo-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+}
+
+/* Orbits */
+.orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px dashed rgba(249, 248, 248, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.orbit-line {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(168, 218, 220, 0.3);
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Counter rotation to keep content fixed */
+@keyframes counterRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+/* Pause rotation when hovering */
+.orbit.paused {
+  animation-play-state: paused;
+}
+
+.orbit.paused .planet-content,
+.orbit.paused .planet-label,
+.planet.paused .planet-content,
+.planet.paused .planet-label {
+  animation-play-state: paused;
+}
+
+/* Planets */
+.planet {
+  position: absolute;
+  top: -30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: all;
+  animation: float 3s ease-in-out infinite;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(99, 102, 241, 0.8));
+}
+
+.planet:hover,
+.planet.hovered {
+  transform: scale(1.2);
+  z-index: 1000;
+  animation-play-state: paused;
+}
+
+.planet-small {
+  width: 50px;
+  height: 50px;
+}
+
+.planet-medium {
+  width: 70px;
+  height: 70px;
+}
+
+.planet-large {
+  width: 90px;
+  height: 90px;
+}
+
+.planet-surface {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  overflow: hidden;
+}
+
+.planet-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.planet-icon {
+  font-size: 2rem;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Planet Label */
+.planet-label {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+/* Fixed Planet Info Popup - Always in user's view */
+.planet-info-fixed {
+  position: fixed;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(15px);
+  padding: 24px;
+  border-radius: 20px;
+  min-width: 280px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  pointer-events: auto;
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.explore-btn {
+  margin-top: 8px;
+  padding: 8px 20px;
+  border-radius: 30px;
+  border: none;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+
+.explore-btn span {
+  transition: transform 0.3s ease;
+  font-size: 1.5rem;
+}
+
+.explore-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.explore-btn:hover span {
+  transform: translateX(4px);
+}
+
+.planet-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.planet-description {
+  font-size: 0.875rem;
+  color: #a8dadc;
+  text-align: center;
+  margin: 0;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .solar-system {
+    max-width: 900px;
+    height: 900px;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .solar-system-container {
+    padding: 60px 16px;
+  }
+
+  .solar-system {
+    max-width: 400px;
+    height: 400px;
+    margin-bottom: 60px;
+  }
+
+  .sun-core {
+    width: 80px;
+    height: 80px;
+  }
+
+  .sun-glow {
+    width: 120px;
+    height: 120px;
+  }
+
+  .logo-text {
+    font-size: 0.9rem;
+  }
+
+  .planet-small {
+    width: 35px;
+    height: 35px;
+  }
+
+  .planet-medium {
+    width: 50px;
+    height: 50px;
+  }
+
+  .planet-large {
+    width: 65px;
+    height: 65px;
+  }
+
+  .planet-icon {
+    font-size: 1.5rem;
+  }
+
+  .planet-label {
+    font-size: 0.65rem;
+    bottom: -20px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .planet-info-fixed {
+    min-width: 200px;
+    padding: 16px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .solar-system {
+    max-width: 320px;
+    height: 320px;
+  }
+
+  .orbit {
+    transform-origin: center;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import DomainService from "@/src/appwrite/domainServices";
+import DomainService from "@/appwrite/domainServices";
 
 const domainService = new DomainService();
 

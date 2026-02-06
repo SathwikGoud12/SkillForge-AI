@@ -1,4 +1,4 @@
-import NotesServices from "@/src/appwrite/NotesServices";
+import NotesServices from "@/appwrite/NotesServices";
 import {
   useMutation,
   useQueryClient,

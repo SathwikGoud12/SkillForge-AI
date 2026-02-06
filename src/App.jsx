@@ -25,6 +25,13 @@ function App() {
     if (!user) {
       console.log("User Not Found! at / home route")
       navigate("/login");
+    } else {
+      // Redirect authenticated users
+      if (user.labels?.includes('admin')) {
+        navigate("/dashboard");
+      } else {
+        navigate("/user");
+      }
     }
     console.log("After calling the function from zustand")
     setIsCheckingUser();

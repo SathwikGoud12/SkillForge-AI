@@ -1,4 +1,4 @@
-import InterviewQuestionService from "@/src/appwrite/InterviewQuestionsServices";
+import InterviewQuestionService from "@/appwrite/InterviewQuestionsServices";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 

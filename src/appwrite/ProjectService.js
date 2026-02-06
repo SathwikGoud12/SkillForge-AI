@@ -10,13 +10,13 @@ class ProjectService {
     return db.createRow(PROJECTS_TABLE_ID, data);
   }
 
-  
+
   async getProjectsByTopic(topicId) {
     return db.listRows(
       PROJECTS_TABLE_ID,
       [
         Query.equal("topicId", [topicId]),
-        Query.equal("isActive", [true]),
+        // Removed isActive filter - attribute doesn't exist in table
       ]
     );
   }
@@ -26,11 +26,8 @@ class ProjectService {
   }
 
   async deleteProject(id) {
-    return db.updateRow(
-      PROJECTS_TABLE_ID,
-      id,
-      { isActive: false }
-    );
+    // Hard delete since we don't have isActive attribute
+    return db.deleteRow(PROJECTS_TABLE_ID, id);
   }
 }
 
