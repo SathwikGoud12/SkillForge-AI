@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ProjectService from "@/src/appwrite/ProjectService";
-import TopicServices from "@/src/appwrite/TopicServices";
+
+import ProjectService from "../../appwrite/ProjectService";
+import TopicServices from "../../appwrite/TopicServices"
 
 
 const projectService = new ProjectService();
