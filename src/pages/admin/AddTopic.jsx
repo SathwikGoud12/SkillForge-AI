@@ -1,4 +1,4 @@
-import TopicServices from "@/src/appwrite/TopicServices";
+import TopicServices from "@/appwrite/TopicServices";
 import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router";

@@ -1,9 +1,9 @@
-import AssessmentService from "@/src/appwrite/AssessmentSevice";
-import InterviewQuestionService from "@/src/appwrite/InterviewQuestionsServices";
-import NotesServices from "@/src/appwrite/NotesServices";
-import ProjectService from "@/src/appwrite/ProjectService";
-import TopicServices from "@/src/appwrite/TopicServices";
-import UserTopicProgressService from "@/src/appwrite/UserTopicProgressService";
+import AssessmentService from "@/appwrite/AssessmentSevice";
+import InterviewQuestionService from "@/appwrite/InterviewQuestionsServices";
+import NotesServices from "@/appwrite/NotesServices";
+import ProjectService from "@/appwrite/ProjectService";
+import TopicServices from "@/appwrite/TopicServices";
+import UserTopicProgressService from "@/appwrite/UserTopicProgressService";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 

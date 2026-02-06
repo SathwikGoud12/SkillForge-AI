@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DomainService from "@/src/appwrite/domainServices";
+import DomainService from "@/appwrite/domainServices";
 import { useNavigate } from "react-router";
 import {
   Dialog,

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import TopicServices from "@/src/appwrite/TopicServices";
-import NotesServices from "@/src/appwrite/NotesServices";
-import AssessmentService from "@/src/appwrite/AssessmentSevice";
-import UserTopicProgressService from "@/src/appwrite/UserTopicProgressService";
+import TopicServices from "@/appwrite/TopicServices";
+import NotesServices from "@/appwrite/NotesServices";
+import AssessmentService from "@/appwrite/AssessmentSevice";
+import UserTopicProgressService from "@/appwrite/UserTopicProgressService";
 
 const topicService = new TopicServices();
 const noteService = new NotesServices();

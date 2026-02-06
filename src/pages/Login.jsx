@@ -37,12 +37,24 @@ function Login() {
     try {
       const existingUser = await appwriteAccount.getAppwriteUser();
       if (existingUser) {
-        navigate("/dashboard");
+        // Check if user is admin
+        if (existingUser.labels?.includes('admin')) {
+          navigate("/dashboard");
+        } else {
+          navigate("/user");
+        }
         return;
       }
 
       await appwriteAccount.createAppwriteEmailPasswordSession(email, password);
-      navigate("/dashboard");
+      const loggedInUser = await appwriteAccount.getAppwriteUser();
+      
+      // Check if user is admin
+      if (loggedInUser.labels?.includes('admin')) {
+        navigate("/dashboard");
+      } else {
+        navigate("/user");
+      }
     } catch (err) {
       setError(err?.message || "Login failed. Check credentials and try again.");
     } finally {

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Link, Outlet, useNavigate } from "react-router";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
-import useAuthStore from "@/src/store/authStore.js";
+import useAuthStore from "@/store/authStore.js";
 import AppwriteAccount from "../appwrite/Account.services";
 
 const MyDashboard = () => {
