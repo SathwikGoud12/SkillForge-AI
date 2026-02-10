@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register";
+import LandingPage from "./pages/LandingPage";
 import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
 import AdminRoute from "./routes/AdminRoute";
@@ -42,6 +43,10 @@ import DoubtClearingSession from "./pages/user/DoubtClearingSession";
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/home",
     element: <App />,
   },
   {
