@@ -32,7 +32,7 @@ const UserDomains = () => {
     try {
       const user = await account.getAppwriteUser();
       if (!user) {
-        navigate("/login");
+        window.location.href = "/"; // No session, go to landing page
         return;
       }
 

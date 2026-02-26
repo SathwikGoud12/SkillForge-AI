@@ -1,7 +1,8 @@
 // src/Pages/Login.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import AppwriteAccount from "../appwrite/Account.services";
+import useAuthStore from "../store/authStore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,9 +22,37 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
 
   const navigate = useNavigate();
   const appwriteAccount = new AppwriteAccount();
+  const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
+  const setIsCheckingUser = useAuthStore((state) => state.setIsCheckingUser);
+
+  // On mount: check if user is already logged in and redirect them
+  useEffect(() => {
+    async function checkExistingSession() {
+      try {
+        const existingUser = await appwriteAccount.getAppwriteUser();
+        if (existingUser) {
+          // Update store and redirect
+          setCurrentUser(existingUser);
+          setIsCheckingUser(false);
+          if (existingUser.labels?.includes('admin')) {
+            navigate("/dashboard", { replace: true });
+          } else {
+            navigate("/user", { replace: true });
+          }
+          return;
+        }
+      } catch {
+        // No session, show login form
+      } finally {
+        setCheckingSession(false);
+      }
+    }
+    checkExistingSession();
+  }, []);
 
   function handleNavigateToRegisterPage() {
     navigate("/register");
@@ -35,21 +64,18 @@ function Login() {
     setLoading(true);
 
     try {
-      const existingUser = await appwriteAccount.getAppwriteUser();
-      if (existingUser) {
-        // Check if user is admin
-        if (existingUser.labels?.includes('admin')) {
-          navigate("/dashboard");
-        } else {
-          navigate("/user");
-        }
-        return;
-      }
-
       await appwriteAccount.createAppwriteEmailPasswordSession(email, password);
       const loggedInUser = await appwriteAccount.getAppwriteUser();
-      
-      // Check if user is admin
+
+      if (!loggedInUser) {
+        throw new Error("Failed to retrieve user after login.");
+      }
+
+      // Update the global auth store so PrivateRoute knows the user is logged in
+      setCurrentUser(loggedInUser);
+      setIsCheckingUser(false);
+
+      // Navigate based on role
       if (loggedInUser.labels?.includes('admin')) {
         navigate("/dashboard");
       } else {
@@ -63,7 +89,20 @@ function Login() {
   }
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
+    <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+      {/* Show loader while checking existing session */}
+      {checkingSession ? (
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-2xl shadow-purple-500/50 animate-pulse">
+            <span className="text-white font-bold text-2xl">SF</span>
+          </div>
+          <div className="flex gap-2">
+            <div className="w-2.5 h-2.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-2.5 h-2.5 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-2.5 h-2.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+        </div>
+      ) : (
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
@@ -130,6 +169,7 @@ function Login() {
           </Button>
         </CardFooter>
       </Card>
+      )}
     </div>
   );
 }
