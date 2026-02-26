@@ -42,6 +42,7 @@ import AssessmentService from "@/appwrite/AssessmentSevice";
 import AssessmentAttemptService from "@/appwrite/AssessmentAttemptService";
 import DomainProgressService from "@/appwrite/DomainProgressService";
 import ProjectService from "@/appwrite/ProjectService";
+import { AITopicNotes, AIConceptExplainer, AIAssessmentGenerator } from "@/components/ai";
 
 // Helper function to safely parse questions
 const getQuestionCount = (assessment) => {
@@ -648,6 +649,18 @@ const UserTopicDetails = () => {
                                         </div>
                                     </motion.div>
                                 ))}
+
+                                {/* AI-POWERED NOTES SECTION */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: TOPIC_DATA.notes.length * 0.1 + 0.2 }}
+                                >
+                                    <AITopicNotes
+                                        topic={{ name: TOPIC_DATA.title }}
+                                        domain={{ name: TOPIC_DATA.domain }}
+                                    />
+                                </motion.div>
                             </motion.div>
                         )}
 
@@ -716,6 +729,18 @@ const UserTopicDetails = () => {
                                         </div>
                                     </motion.div>
                                 ))}
+
+                                {/* AI CONCEPT EXPLAINER SECTION */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    className="mt-8"
+                                >
+                                    <AIConceptExplainer
+                                        topicContext={TOPIC_DATA.title}
+                                    />
+                                </motion.div>
                             </motion.div>
                         )}
 
@@ -861,6 +886,24 @@ const UserTopicDetails = () => {
                                         );
                                     })
                                 )}
+
+                                {/* AI ASSESSMENT GENERATOR SECTION */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.5 }}
+                                    className="col-span-full mt-8"
+                                >
+                                    <AIAssessmentGenerator
+                                        topic={{ name: TOPIC_DATA.title }}
+                                        domain={{ name: TOPIC_DATA.domain }}
+                                        onAssessmentGenerated={(result) => {
+                                            console.log("AI Assessment Generated:", result);
+                                            toast.success("New AI Assessment is ready!");
+                                            // You can add logic here to save this to your Appwrite DB
+                                        }}
+                                    />
+                                </motion.div>
                             </motion.div>
                         )}
 

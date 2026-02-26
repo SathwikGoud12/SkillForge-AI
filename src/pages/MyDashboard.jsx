@@ -20,7 +20,7 @@ const MyDashboard = () => {
     if (!result?.message) {
       setIsLoggingOut(false)
       setCurrentUser(null)
-      navigate("/login")
+      window.location.href = "/" // Full reload to landing page, clears all state
     }
   }
 

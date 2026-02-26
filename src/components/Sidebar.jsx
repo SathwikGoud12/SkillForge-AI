@@ -18,6 +18,7 @@ import {
 import AppwriteAccount from "@/appwrite/Account.services";
 import { toast } from "sonner";
 import { useSidebar } from "@/pages/user/UserLayout";
+import useAuthStore from "@/store/authStore";
 
 const account = new AppwriteAccount();
 
@@ -27,6 +28,8 @@ const Sidebar = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const { isExpanded, setIsExpanded } = useSidebar();
+    const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
+    const setIsCheckingUser = useAuthStore((state) => state.setIsCheckingUser);
 
     useEffect(() => {
         loadUser();
@@ -46,8 +49,11 @@ const Sidebar = () => {
     const handleLogout = async () => {
         try {
             await account.logout();
+            setCurrentUser(null);      // Clear user from Zustand store
+            setIsCheckingUser(false);  // Ensure not stuck in loading
             toast.success("Logged out successfully");
-            navigate("/login");
+            // Use window.location.href to fully reload and clear all state
+            window.location.href = "/";
         } catch (error) {
             console.error("Error logging out:", error);
             toast.error("Failed to logout");

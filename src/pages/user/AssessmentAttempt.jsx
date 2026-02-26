@@ -46,7 +46,7 @@ const AssessmentAttempt = () => {
             try {
                 const currentUser = await appwriteAccount.getAppwriteUser();
                 if (!currentUser) {
-                    navigate("/login");
+                    window.location.href = "/"; // No session, go to landing page
                     return;
                 }
                 setUser(currentUser);

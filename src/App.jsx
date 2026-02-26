@@ -7,21 +7,21 @@ function App() {
   const appwriteAccount = new AppwriteAccount();
   const navigate = useNavigate();
 
-  
-  const currentUser = useAuthStore((state)=> state.currentUser) // schedules the component re-render
+
+  const currentUser = useAuthStore((state) => state.currentUser) // schedules the component re-render
   const isCheckingUser = useAuthStore((state) => state.isCheckingUser)
   const setCurrentUser = useAuthStore((state) => state.setCurrentUser)
   const setIsCheckingUser = useAuthStore((state) => state.setIsCheckingUser)
-  
+
   console.log("Component Renders...")
   // console.log(currentUser); // null
   console.log(setCurrentUser); // fn body
 
   async function getCurrentUser() {
-    
+
     const user = await appwriteAccount.getAppwriteUser()
     console.log("Current User from appwrite: ", user);
-    setCurrentUser(user); 
+    setCurrentUser(user);
     if (!user) {
       console.log("User Not Found! at / home route")
       navigate("/login");
@@ -34,7 +34,7 @@ function App() {
       }
     }
     console.log("After calling the function from zustand")
-    setIsCheckingUser();
+    setIsCheckingUser(false);
   }
 
   // componentDidMount()
@@ -58,7 +58,7 @@ function App() {
           currentUser.labels.includes('admin') && <Link to="/dashboard">My Dashboard</Link>
         }
         <Link to="/profile">My Profile</Link>
-          
+
       </nav>
     </>
   )

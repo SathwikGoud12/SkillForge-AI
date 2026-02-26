@@ -28,6 +28,7 @@ import DomainService from "@/appwrite/domainServices";
 import TopicServices from "@/appwrite/TopicServices";
 import UserTopicProgressService from "@/appwrite/UserTopicProgressService";
 import SolarSystem from "@/components/SolarSystem";
+import { AILearningRoadmap } from "@/components/ai";
 
 const appWriteAccount = new AppwriteAccount();
 const profileService = new UserProfileService();
@@ -104,7 +105,7 @@ const UserDashBoard = () => {
     try {
       await appWriteAccount.logout();
       toast.success("Logged out successfully!");
-      navigate("/login");
+      window.location.href = "/"; // Full reload to landing page, clears all state
     } catch (error) {
       toast.error("Logout failed");
     }
@@ -584,6 +585,10 @@ const UserDashBoard = () => {
             <motion.button
               whileHover={{ scale: 1.08, y: -4 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                const el = document.getElementById('ai-roadmap-section');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all text-center group"
             >
               <motion.div
@@ -593,9 +598,25 @@ const UserDashBoard = () => {
               >
                 <Sparkles className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:text-purple-600" />
               </motion.div>
-              <p className="font-semibold text-slate-900">AI Help</p>
+              <p className="font-semibold text-slate-900">AI Path</p>
             </motion.button>
           </div>
+        </motion.div>
+
+        {/* AI LEARNING ROADMAP SECTION */}
+        <motion.div
+          id="ai-roadmap-section"
+          variants={itemVariants}
+          className="pt-8"
+        >
+          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <Rocket className="w-6 h-6 text-purple-600" />
+            AI Career Roadmap
+          </h3>
+          <AILearningRoadmap
+            domain={{ name: profile?.targetRole || enrolledDomains[0]?.title || "Full Stack Development" }}
+            userProfile={{ level: profile?.level || "beginner", goals: [profile?.targetRole] }}
+          />
         </motion.div>
 
         {/* Leaderboard */}

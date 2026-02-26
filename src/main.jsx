@@ -12,6 +12,8 @@ import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
 import AdminRoute from "./routes/AdminRoute";
 import MyDashboard from "./pages/MyDashboard";
+import { AuthInitializer } from "./components/AuthInitializer";
+import { RootLayout } from "./components/RootLayout";
 
 import AddDomainForm from "./pages/admin/AddDomainForm";
 import Overview from "./pages/admin/Overview";
@@ -42,93 +44,97 @@ import DoubtClearingSession from "./pages/user/DoubtClearingSession";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <LandingPage />,
-  },
-  {
-    path: "/home",
-    element: <App />,
-  },
-  {
-    path: "/u/:username",
-    element: <PublicProfile />,
-  },
-  {
-    path: "/login",
-    element: (
-      <PublicRoute>
-        <Login />
-      </PublicRoute>
-    ),
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/user",
-
-    element: <UserLayout />,
+    element: <RootLayout />,
     children: [
-      { index: true, element: <UserDashBoard /> },
-      { path: "setup", element: <UserSetup /> },
-      { path: "domains", element: <UserDomains /> },
-      { path: "certificates", element: <MyCertificates /> },
-      { path: "profile", element: <UserProfile /> },
-      { path: "progress", element: <UserProgress /> },
-      { path: "study-materials", element: <StudyMaterials /> },
-      { path: "study-materials/subject/:subjectId", element: <SubjectDetail /> },
-      { path: "study-materials/doubt-session/:subjectId", element: <DoubtClearingSession /> },
       {
-        path: "domains/:domainId/topics",
-        element: <UserTopics />,
+        path: "/",
+        element: <LandingPage />,
       },
       {
-        path: "domains/:domainId/topics/:topicId",
-        element: <UserTopicDetails />,
+        path: "/home",
+        element: <App />,
       },
       {
-        path: "domains/:domainId/topics/:topicId/assessment/:assessmentId",
-        element: <AssessmentAttempt />,
-      },
-    ],
-  },
-  {
-    path: "/dashboard",
-    element: (
-      <PrivateRoute>
-        <AdminRoute>
-          <MyDashboard />
-        </AdminRoute>
-      </PrivateRoute>
-    ),
-    children: [
-      { index: true, element: <Overview /> },
-      { path: "adddomain", element: <AddDomainForm /> },
-      { path: "alldomains", element: <AllDomains /> },
-      { path: "edit-domain/:id", element: <EditDomain /> },
-      { path: "domains/:domainId/topics", element: <TopicsList /> },
-      { path: "domains/:domainId/add-topic", element: <AddTopic /> },
-      { path: "domains/:domainId/add-final-project", element: <AddDomainProject /> },
-      {
-        path: "domains/:domainId/topics/:topicId/add-note",
-        element: <AddNote />,
+        path: "/u/:username",
+        element: <PublicProfile />,
       },
       {
-        path: "domains/:domainId/topics/:topicId",
-        element: <TopicDetail />,
+        path: "/login",
+        element: <Login />,
       },
       {
-        path: "domains/:domainId/topics/:topicId/add-question",
-        element: <AddInterviewQuestion />,
+        path: "/register",
+        element: <Register />,
       },
       {
-        path: "domains/:domainId/topics/:topicId/add-assessment",
-        element: <AddAssessment />,
+        path: "/user",
+        element: (
+          <PrivateRoute>
+            <UserLayout />
+          </PrivateRoute>
+        ),
+        children: [
+          { index: true, element: <UserDashBoard /> },
+          { path: "setup", element: <UserSetup /> },
+          { path: "domains", element: <UserDomains /> },
+          { path: "certificates", element: <MyCertificates /> },
+          { path: "profile", element: <UserProfile /> },
+          { path: "progress", element: <UserProgress /> },
+          { path: "study-materials", element: <StudyMaterials /> },
+          { path: "study-materials/subject/:subjectId", element: <SubjectDetail /> },
+          { path: "study-materials/doubt-session/:subjectId", element: <DoubtClearingSession /> },
+          {
+            path: "domains/:domainId/topics",
+            element: <UserTopics />,
+          },
+          {
+            path: "domains/:domainId/topics/:topicId",
+            element: <UserTopicDetails />,
+          },
+          {
+            path: "domains/:domainId/topics/:topicId/assessment/:assessmentId",
+            element: <AssessmentAttempt />,
+          },
+        ],
       },
       {
-        path: "domains/:domainId/topics/:topicId/add-project",
-        element: <AddProject />,
+        path: "/dashboard",
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <MyDashboard />
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+        children: [
+          { index: true, element: <Overview /> },
+          { path: "adddomain", element: <AddDomainForm /> },
+          { path: "alldomains", element: <AllDomains /> },
+          { path: "edit-domain/:id", element: <EditDomain /> },
+          { path: "domains/:domainId/topics", element: <TopicsList /> },
+          { path: "domains/:domainId/add-topic", element: <AddTopic /> },
+          { path: "domains/:domainId/add-final-project", element: <AddDomainProject /> },
+          {
+            path: "domains/:domainId/topics/:topicId/add-note",
+            element: <AddNote />,
+          },
+          {
+            path: "domains/:domainId/topics/:topicId",
+            element: <TopicDetail />,
+          },
+          {
+            path: "domains/:domainId/topics/:topicId/add-question",
+            element: <AddInterviewQuestion />,
+          },
+          {
+            path: "domains/:domainId/topics/:topicId/add-assessment",
+            element: <AddAssessment />,
+          },
+          {
+            path: "domains/:domainId/topics/:topicId/add-project",
+            element: <AddProject />,
+          },
+        ],
       },
     ],
   },
