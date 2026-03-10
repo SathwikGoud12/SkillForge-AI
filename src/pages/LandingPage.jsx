@@ -1,436 +1,340 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { Button } from '@/components/ui/button';
 
-const LandingPage = () => {
+/* ──────────────────────────────────────────────────────────────
+   COLOR PALETTE  (Techsnap-inspired, SkillForge brand)
+   Primary accent : #e879f9 (fuchsia/magenta)
+   Dark bg        : #000000 / #0a0a0a
+   Mid bg         : #111111
+   Light section  : #f4f4f7
+   Text           : white on dark · #111 on light
+──────────────────────────────────────────────────────────────── */
+
+const ACCENT = '#e879f9';
+const ACCENT2 = '#a855f7';
+
+const domains = [
+  { icon: '⚛️', name: 'React.js', tag: 'Skill Path', bg: '#61dafb20', border: '#61dafb40' },
+  { icon: '🟩', name: 'Node.js', tag: 'Skill Path', bg: '#3c873a20', border: '#3c873a40' },
+  { icon: '🍃', name: 'MongoDB', tag: 'Database Path', bg: '#00ed6420', border: '#00ed6440' },
+  { icon: '🔷', name: 'TypeScript', tag: 'Skill Path', bg: '#3178c620', border: '#3178c640' },
+  { icon: '🐍', name: 'Python', tag: 'Skill Path', bg: '#ffd43b20', border: '#ffd43b40' },
+  { icon: '🤖', name: 'AI / ML', tag: 'Career Path', bg: '#e879f920', border: '#e879f940' },
+  { icon: '☁️', name: 'Cloud & DevOps', tag: 'Career Path', bg: '#38bdf820', border: '#38bdf840' },
+  { icon: '🎯', name: 'DSA', tag: 'Interview Prep', bg: '#fb923c20', border: '#fb923c40' },
+];
+
+const features = [
+  { icon: '🤖', title: 'AI Learning Mentor', desc: 'Get real-time explanations, mock interviews & career roadmaps from your personal AI tutor, available 24/7.' },
+  { icon: '🗺️', title: 'Structured Roadmaps', desc: 'Follow curated, step-by-step learning paths from beginner to job-ready developer for every domain.' },
+  { icon: '📊', title: 'Skill Analytics', desc: 'Track streaks, XP, domain-wise progress heatmaps and performance over time — all in one dashboard.' },
+  { icon: '🏆', title: 'Certificates & Badges', desc: 'Earn industry-recognised certificates and shareable badges to supercharge your resume and LinkedIn.' },
+  { icon: '🎯', title: 'Smart Assessments', desc: 'Test yourself with adaptive MCQs and coding challenges after each module to lock in what you learn.' },
+  { icon: '📚', title: 'Study Materials', desc: 'Access curated notes, cheat sheets, and resource libraries tailored to every topic in your path.' },
+];
+
+const testimonials = [
+  { name: 'Priya Sharma', role: 'SDE at Razorpay', avatar: '👩‍💻', text: 'SkillForge\'s AI mentor helped me crack my interviews in 3 months. The structured roadmaps are a game changer!', rating: 5 },
+  { name: 'Arjun Mehta', role: 'Data Engineer at Swiggy', avatar: '👨‍💻', text: 'Finally a platform that feels like it was built FOR developers. The progress analytics kept me accountable every single day.', rating: 5 },
+  { name: 'Neha Gupta', role: 'Fullstack at Startup', avatar: '👩‍🎓', text: 'The domain cards and learning paths made it super clear what to learn next. Got my first dev job within 6 months!', rating: 5 },
+];
+
+export default function LandingPage() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const [activeTab, setActiveTab] = useState('trending');
+  const [counts, setCounts] = useState({ l: 0, t: 0, s: 0 });
+  const statsRef = useRef(null);
+  const [sv, setSv] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const features = [
-    {
-      icon: '📝',
-      title: 'Smart Notes + Markdown Editor',
-      description: 'Create beautiful, structured notes with our powerful markdown editor and syntax highlighting.',
-      gradient: 'from-purple-500 to-pink-500'
-    },
-    {
-      icon: '🏷️',
-      title: 'Tags & Notebooks Organization',
-      description: 'Organize your learning materials with smart tags and customizable notebooks.',
-      gradient: 'from-blue-500 to-cyan-500'
-    },
-    {
-      icon: '🔍',
-      title: 'Instant Search',
-      description: 'Find any note, topic, or resource instantly with AI-powered search.',
-      gradient: 'from-green-500 to-emerald-500'
-    },
-    {
-      icon: '💾',
-      title: 'Offline Auto-Save',
-      description: 'Never lose your progress with automatic offline saving and sync.',
-      gradient: 'from-yellow-500 to-orange-500'
-    },
-    {
-      icon: '🤖',
-      title: 'AI Learning Assistant',
-      description: 'Get instant help, explanations, and personalized recommendations from AI.',
-      gradient: 'from-pink-500 to-red-500'
-    },
-    {
-      icon: '🏆',
-      title: 'Streaks, Points & Certificates',
-      description: 'Stay motivated with gamification, track streaks, and earn certificates.',
-      gradient: 'from-indigo-500 to-purple-500'
-    }
-  ];
+  useEffect(() => {
+    if (!sv) return;
+    const dur = 1600, start = performance.now();
+    const tick = (now) => {
+      const p = Math.min((now - start) / dur, 1);
+      const e = 1 - (1 - p) ** 3;
+      setCounts({ l: Math.floor(e * 10000), t: Math.floor(e * 500), s: Math.floor(e * 95) });
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [sv]);
 
-  const stats = [
-    { value: '10K+', label: 'Learners' },
-    { value: '500+', label: 'Topics' },
-    { value: '95%', label: 'Success Rate' },
-    { value: '24/7', label: 'AI Support' }
-  ];
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setSv(true); }, { threshold: 0.3 });
+    if (statsRef.current) obs.observe(statsRef.current);
+    return () => obs.disconnect();
+  }, []);
 
-  const testimonials = [
-    {
-      name: 'Sarah Chen',
-      role: 'Full Stack Developer',
-      avatar: '👩‍💻',
-      text: 'SkillForge helped me transition from design to development in just 6 months. The AI assistant is like having a personal mentor!',
-      rating: 5
-    },
-    {
-      name: 'Rajesh Kumar',
-      role: 'Data Science Student',
-      avatar: '👨‍🎓',
-      text: 'The structured learning paths and smart notes feature made complex topics so much easier to understand. Highly recommended!',
-      rating: 5
-    },
-    {
-      name: 'Emily Rodriguez',
-      role: 'Product Manager',
-      avatar: '👩‍💼',
-      text: 'I love the streak tracking and gamification. It keeps me motivated to learn something new every day. Best learning platform!',
-      rating: 5
-    }
-  ];
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  const goLogin = () => navigate('/login');
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleGetStarted = () => {
-    navigate('/login');
+  const S = { // shared styles helper
+    section: (bg) => ({ background: bg, padding: '96px 24px' }),
+    sectionInner: { maxWidth: 1200, margin: '0 auto' },
+    pill: (active) => ({
+      padding: '8px 24px', borderRadius: 50, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700,
+      background: active ? ACCENT : 'rgba(255,255,255,0.08)',
+      color: active ? 'white' : 'rgba(255,255,255,0.5)',
+      transition: 'all 0.2s',
+    }),
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 text-white overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-40" />
-      </div>
+    <div style={{ fontFamily: "'Inter','Segoe UI',sans-serif", overflowX: 'hidden', background: '#000' }}>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-      {/* 1. NAVBAR */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-slate-950/90 backdrop-blur-xl shadow-lg shadow-purple-500/10 border-b border-white/5' : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300">
-                <span className="text-xl sm:text-2xl font-bold">SF</span>
-              </div>
-              <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                SkillForge
-              </span>
+      {/* ══ NAVBAR ══════════════════════════════════════════════════ */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
+        background: scrolled ? 'rgba(0,0,0,0.85)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
+        transition: 'all 0.3s',
+      }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* Logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT2}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 20px ${ACCENT}50` }}>
+              <span style={{ color: 'white', fontWeight: 900, fontSize: 15 }}>SF</span>
             </div>
+            <span style={{ fontWeight: 900, fontSize: 20, color: 'white', letterSpacing: '-0.5px' }}>SkillForge</span>
+            <span style={{ fontSize: 10, fontWeight: 700, color: ACCENT, background: `${ACCENT}15`, border: `1px solid ${ACCENT}40`, borderRadius: 50, padding: '2px 8px', letterSpacing: '0.08em' }}>AI</span>
+          </div>
 
-            {/* Navigation Links - Desktop */}
-            <div className="hidden md:flex items-center gap-1 lg:gap-2">
-              <Button 
-                variant="ghost" 
-                onClick={() => scrollToSection('features')}
-                className="text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300"
-              >
-                Features
-              </Button>
-              <Button 
-                variant="ghost"
-                onClick={() => scrollToSection('how-it-works')}
-                className="text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300"
-              >
-                How It Works
-              </Button>
-              <Button 
-                variant="ghost"
-                onClick={() => scrollToSection('pricing')}
-                className="text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300"
-              >
-                Pricing
-              </Button>
-              <Button 
-                variant="ghost"
-                onClick={() => scrollToSection('faq')}
-                className="text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300"
-              >
-                FAQ
-              </Button>
-              <Button 
-                onClick={handleGetStarted}
-                className="ml-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-2 rounded-lg shadow-lg shadow-purple-500/50 hover:shadow-xl hover:shadow-purple-500/60 transform hover:scale-105 transition-all duration-300"
-              >
-                Get Started Free
-              </Button>
-            </div>
+          {/* Nav links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {[['features', 'Features'], ['domains', 'Domains'], ['how-it-works', 'How It Works'], ['testimonials', 'Reviews']].map(([id, label]) => (
+              <button key={id} onClick={() => scrollTo(id)}
+                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.65)', fontSize: 14, fontWeight: 600, padding: '8px 14px', borderRadius: 8, cursor: 'pointer', transition: 'color 0.2s' }}
+                onMouseEnter={e => e.target.style.color = 'white'} onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.65)'}>
+                {label}
+              </button>
+            ))}
+          </div>
 
-            {/* Mobile CTA */}
-            <Button 
-              onClick={handleGetStarted}
-              className="md:hidden bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg shadow-lg"
-            >
-              Get Started
-            </Button>
+          {/* CTA */}
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button onClick={goLogin} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '9px 20px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 600, transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}>
+              Login
+            </button>
+            <button onClick={goLogin} style={{ background: ACCENT, color: 'white', border: 'none', padding: '9px 24px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700, boxShadow: `0 4px 20px ${ACCENT}50`, transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)'; }} onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}>
+              Get Started Free
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* 2. HERO SECTION */}
-      <section className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Text Content */}
-            <div className="text-center lg:text-left space-y-6 sm:space-y-8 animate-fade-in">
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight">
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-gradient-x bg-300%">
-                  Master Any Skill
-                </span>
-                <br />
-                <span className="text-white">with AI Precision</span>
-              </h1>
-              
-              <p className="text-lg sm:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Structured learning paths, smart notes, streak tracking, and AI support — all in one platform.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                <Button 
-                  onClick={handleGetStarted}
-                  className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-6 text-lg rounded-xl shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transform hover:scale-105 transition-all duration-300"
-                >
-                  Get Started Free →
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => scrollToSection('features')}
-                  className="w-full sm:w-auto border-2 border-purple-500/50 text-white px-8 py-6 text-lg rounded-xl hover:bg-purple-500/10 hover:border-purple-400 transform hover:scale-105 transition-all duration-300"
-                >
-                  See Features
-                </Button>
-              </div>
+      {/* ══ HERO ════════════════════════════════════════════════════ */}
+      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative', overflow: 'hidden', paddingTop: 68 }}>
+        {/* Radial purple-magenta glow at bottom-center (like Techsnap) */}
+        <div style={{ position: 'absolute', bottom: '-10%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 500, borderRadius: '50%', background: `radial-gradient(ellipse, ${ACCENT}22 0%, ${ACCENT2}10 40%, transparent 70%)`, filter: 'blur(40px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '20%', left: '10%', width: 300, height: 300, borderRadius: '50%', background: `${ACCENT2}08`, filter: 'blur(80px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '15%', right: '8%', width: 250, height: 250, borderRadius: '50%', background: `${ACCENT}08`, filter: 'blur(80px)', pointerEvents: 'none' }} />
+
+        {/* Floating badge */}
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 50, padding: '7px 18px', marginBottom: 32, backdropFilter: 'blur(10px)' }}>
+          <span style={{ fontSize: 14 }}>🚀</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.04em' }}>AI-Powered Tech Learning Platform</span>
+        </div>
+
+        {/* Main headline — Techsnap style: huge, bold, accent word */}
+        <h1 style={{ fontSize: 'clamp(2.8rem, 7vw, 6rem)', fontWeight: 900, lineHeight: 1.05, color: '#fff', margin: '0 0 24px', letterSpacing: '-2px', maxWidth: 900, padding: '0 16px' }}>
+          The Smarter Way to<br />
+          Become a&nbsp;
+          <span style={{ color: ACCENT, WebkitTextStroke: '0px', textShadow: `0 0 40px ${ACCENT}60` }}>Job-Ready</span>
+          &nbsp;Developer
+        </h1>
+
+        <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'rgba(255,255,255,0.55)', maxWidth: 560, lineHeight: 1.7, margin: '0 0 44px', padding: '0 16px' }}>
+          From confused student to job-ready developer — with AI mentorship, structured domain paths, skill analytics, and industry certificates.
+        </p>
+
+        {/* CTAs */}
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button onClick={goLogin} style={{ background: ACCENT, color: 'white', border: 'none', padding: '16px 40px', borderRadius: 14, cursor: 'pointer', fontSize: 16, fontWeight: 800, boxShadow: `0 8px 32px ${ACCENT}50`, letterSpacing: '0.01em', transition: 'all 0.3s' }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 16px 48px ${ACCENT}70`; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 8px 32px ${ACCENT}50`; }}>
+            Start learning for free
+          </button>
+          <button onClick={() => scrollTo('features')} style={{ background: 'transparent', color: 'white', border: '1.5px solid rgba(255,255,255,0.2)', padding: '16px 36px', borderRadius: 14, cursor: 'pointer', fontSize: 16, fontWeight: 700, backdropFilter: 'blur(8px)', transition: 'all 0.3s' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}>
+            Explore features
+          </button>
+        </div>
+
+        {/* Trust line */}
+        <p style={{ marginTop: 32, fontSize: 13, color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>
+          Trusted by <strong style={{ color: 'rgba(255,255,255,0.55)' }}>10,000+ learners</strong> across India · Free forever plan available
+        </p>
+      </section>
+
+      {/* ══ STATS COUNT-UP BAR ══════════════════════════════════════ */}
+      <section ref={statsRef} style={{ background: '#0d0d0d', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '44px 24px' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, textAlign: 'center' }}>
+          {[
+            { v: `${counts.l.toLocaleString()}+`, l: 'Active Learners', icon: '👥' },
+            { v: `${counts.t}+`, l: 'Topics & Domains', icon: '📚' },
+            { v: `${counts.s}%`, l: 'Placement Rate', icon: '🎯' },
+            { v: '24/7', l: 'AI Mentor Support', icon: '🤖' },
+          ].map((s, i) => (
+            <div key={i}>
+              <div style={{ fontSize: 24, marginBottom: 6 }}>{s.icon}</div>
+              <div style={{ fontSize: 32, fontWeight: 900, color: 'white', lineHeight: 1 }}>{s.v}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 6, fontWeight: 600, letterSpacing: '0.04em' }}>{s.l.toUpperCase()}</div>
             </div>
+          ))}
+        </div>
+      </section>
 
-            {/* Right: Dashboard Mockup Illustration */}
-            <div className="relative animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="relative group">
-                {/* Glow effect */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
-                
-                {/* Dashboard SVG Mockup */}
-                <div className="relative bg-gradient-to-br from-slate-900/90 to-purple-900/50 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl transform group-hover:scale-105 transition-all duration-500">
-                  <div className="space-y-4">
-                    {/* Header */}
-                    <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg" />
-                        <div className="space-y-1">
-                          <div className="w-20 sm:w-24 h-3 bg-white/20 rounded" />
-                          <div className="w-16 sm:w-20 h-2 bg-white/10 rounded" />
-                        </div>
-                      </div>
-                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500/20 rounded-full border-2 border-green-400 animate-pulse" />
-                    </div>
+      {/* ══ DOMAINS SECTION (Techsnap-style) ════════════════════════ */}
+      <section id="domains" style={{ background: '#f4f4f7', padding: '96px 24px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <p style={{ fontSize: 12, fontWeight: 800, color: ACCENT2, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 12 }}>EXPLORE SKILL PATHS</p>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#0f0f0f', margin: '0 0 16px', letterSpacing: '-1px' }}>
+              Everything You Need to Level Up
+            </h2>
+            <p style={{ fontSize: 17, color: '#64748b', maxWidth: 480, margin: '0 auto' }}>
+              Structured paths for every career goal — from web to AI to cloud.
+            </p>
+          </div>
 
-                    {/* Progress Card */}
-                    <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-xl p-4 sm:p-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="w-20 sm:w-32 h-4 bg-white/30 rounded" />
-                        <div className="text-xs sm:text-sm font-bold text-purple-300">75%</div>
-                      </div>
-                      <div className="w-full h-2 sm:h-3 bg-white/10 rounded-full overflow-hidden">
-                        <div className="w-3/4 h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse" />
-                      </div>
-                    </div>
+          {/* Trending / Certification tabs (Techsnap-inspired) */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 36, flexWrap: 'wrap' }}>
+            {['trending', 'career'].map(tab => (
+              <button key={tab} onClick={() => setActiveTab(tab)} style={{
+                padding: '9px 22px', borderRadius: 50, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, transition: 'all 0.2s',
+                background: activeTab === tab ? ACCENT : 'transparent',
+                color: activeTab === tab ? 'white' : '#475569',
+                boxShadow: activeTab === tab ? `0 4px 16px ${ACCENT}40` : 'none',
+              }}>
+                {tab === 'trending' ? '🔥 Popular & Trending' : '🏆 Career Paths'}
+              </button>
+            ))}
+          </div>
 
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
-                      {[
-                        { icon: '🔥', value: '12', label: 'Day Streak' },
-                        { icon: '⭐', value: '450', label: 'Points' },
-                        { icon: '🏆', value: '8', label: 'Badges' }
-                      ].map((stat, i) => (
-                        <div key={i} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-4 text-center">
-                          <div className="text-xl sm:text-2xl mb-1">{stat.icon}</div>
-                          <div className="text-base sm:text-xl font-bold text-white mb-1">{stat.value}</div>
-                          <div className="text-[10px] sm:text-xs text-gray-400">{stat.label}</div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Course List */}
-                    <div className="space-y-2 sm:space-y-3">
-                      {[1, 2, 3].map((_, i) => (
-                        <div key={i} className="flex items-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-2 sm:p-3 hover:bg-white/10 transition-colors">
-                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex-shrink-0" />
-                          <div className="flex-1 space-y-1.5 min-w-0">
-                            <div className="w-3/4 h-2.5 sm:h-3 bg-white/20 rounded" />
-                            <div className="w-1/2 h-1.5 sm:h-2 bg-white/10 rounded" />
-                          </div>
-                          <div className="w-12 sm:w-16 h-1.5 sm:h-2 bg-green-500/50 rounded-full flex-shrink-0" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+          {/* Domain cards grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 14 }}>
+            {domains.map((d, i) => (
+              <div key={i} onClick={goLogin}
+                style={{ background: 'white', borderRadius: 20, padding: '20px 22px', border: `1.5px solid ${d.border}`, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', transition: 'all 0.25s', boxShadow: '0 1px 8px rgba(0,0,0,0.04)' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = `0 12px 32px rgba(0,0,0,0.1)`; e.currentTarget.style.borderColor = ACCENT; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 1px 8px rgba(0,0,0,0.04)'; e.currentTarget.style.borderColor = d.border; }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: d.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
+                  {d.icon}
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: 15, color: '#0f172a' }}>{d.name}</div>
+                  <div style={{ fontSize: 12, color: '#94a3b8', fontWeight: 600, marginTop: 2 }}>{d.tag}</div>
                 </div>
               </div>
+            ))}
+            {/* View all card */}
+            <div onClick={goLogin}
+              style={{ background: `linear-gradient(135deg, ${ACCENT2}15, ${ACCENT}15)`, borderRadius: 20, padding: '20px 22px', border: `1.5px dashed ${ACCENT}50`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', transition: 'all 0.25s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.background = `linear-gradient(135deg, ${ACCENT2}25, ${ACCENT}25)`; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = `linear-gradient(135deg, ${ACCENT2}15, ${ACCENT}15)`; }}>
+              <span style={{ fontWeight: 800, fontSize: 15, color: ACCENT2 }}>View All Paths →</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. FEATURES GRID (6 cards) */}
-      <section id="features" className="py-12 sm:py-20 px-4 sm:px-6 bg-black/20 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Features Built to Boost Your Learning
+      {/* ══ FEATURES ════════════════════════════════════════════════ */}
+      <section id="features" style={{ background: '#0a0a0a', padding: '96px 24px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <p style={{ fontSize: 12, fontWeight: 800, color: ACCENT, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 12 }}>PLATFORM FEATURES</p>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: 'white', margin: '0 0 16px', letterSpacing: '-1px' }}>
+              Built for Serious Learners.<br />
+              <span style={{ color: ACCENT }}>Not just another MOOC.</span>
             </h2>
-            <p className="text-lg sm:text-xl text-gray-400">
-              Everything you need to master any skill efficiently
+            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.45)', maxWidth: 500, margin: '0 auto' }}>
+              Every tool on SkillForge is designed to get you job-ready, not just certificate-ready.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="group p-6 sm:p-8 bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl hover:border-purple-500/50 transform hover:scale-105 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20"
-              >
-                <div className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${feature.gradient} rounded-xl sm:rounded-2xl flex items-center justify-center text-2xl sm:text-3xl mb-4 sm:mb-6 transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg`}>
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-purple-300 transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                  {feature.description}
-                </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+            {features.map((f, i) => (
+              <div key={i}
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: 32, transition: 'all 0.3s', cursor: 'default' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = `${ACCENT}50`; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}>
+                <div style={{ fontSize: 36, marginBottom: 18 }}>{f.icon}</div>
+                <h3 style={{ fontSize: 19, fontWeight: 800, color: 'white', margin: '0 0 10px', letterSpacing: '-0.3px' }}>{f.title}</h3>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. HOW IT WORKS (3 steps) */}
-      <section id="how-it-works" className="py-12 sm:py-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              How It Works
+      {/* ══ HOW IT WORKS ════════════════════════════════════════════ */}
+      <section id="how-it-works" style={{ background: '#f4f4f7', padding: '96px 24px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <p style={{ fontSize: 12, fontWeight: 800, color: ACCENT2, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 12 }}>SIMPLE ONBOARDING</p>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#0f0f0f', margin: '0 0 16px', letterSpacing: '-1px' }}>
+              From Zero to Hired in 3 Steps
             </h2>
-            <p className="text-lg sm:text-xl text-gray-400">
-              Start your learning journey in 3 simple steps
-            </p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 relative">
-            {/* Connecting Line - Desktop */}
-            <div className="hidden sm:block absolute top-12 left-0 right-0 h-1 bg-gradient-to-r from-purple-500/50 via-pink-500/50 to-purple-500/50 -z-10" />
-            
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
             {[
-              { 
-                step: '01', 
-                title: 'Signup', 
-                desc: 'Create your free account in seconds',
-                icon: '👤'
-              },
-              { 
-                step: '02', 
-                title: 'Choose Domain', 
-                desc: 'Select your learning path from 500+ topics',
-                icon: '📚'
-              },
-              { 
-                step: '03', 
-                title: 'Learn & Track Progress', 
-                desc: 'Study with AI assistance and earn certificates',
-                icon: '🚀'
-              }
-            ].map((item, index) => (
-              <div 
-                key={index}
-                className="relative p-6 sm:p-8 bg-gradient-to-br from-white/10 to-white/0 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl hover:border-purple-500/50 transform hover:scale-105 transition-all duration-300 text-center"
-              >
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold mx-auto mb-4 sm:mb-6 shadow-lg shadow-purple-500/50 relative z-10">
-                  {item.step}
+              { step: '01', icon: '👤', title: 'Create Free Account', desc: 'Sign up in 30 seconds. No credit card. Just your email and you\'re in.', color: ACCENT },
+              { step: '02', icon: '🎯', title: 'Pick Your Path', desc: 'Choose from 50+ curated skill paths — Web, AI, Cloud, DSA & more.', color: ACCENT2 },
+              { step: '03', icon: '🚀', title: 'Learn, Track & Get Hired', desc: 'Build with AI guidance, earn certificates, and land your dream job.', color: '#10b981' },
+            ].map((s, i) => (
+              <div key={i} style={{ background: 'white', borderRadius: 28, padding: 40, textAlign: 'center', boxShadow: '0 2px 16px rgba(0,0,0,0.06)', border: '1.5px solid rgba(0,0,0,0.05)', transition: 'all 0.3s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 20px 48px rgba(0,0,0,0.12)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 16px rgba(0,0,0,0.06)'; }}>
+                <div style={{ width: 60, height: 60, borderRadius: '50%', background: `${s.color}15`, border: `2px solid ${s.color}40`, margin: '0 auto 14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontWeight: 900, fontSize: 18, color: s.color }}>{s.step}</span>
                 </div>
-                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{item.icon}</div>
-                <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white">
-                  {item.title}
-                </h3>
-                <p className="text-sm sm:text-base text-gray-400">
-                  {item.desc}
-                </p>
+                <div style={{ fontSize: 42, marginBottom: 14 }}>{s.icon}</div>
+                <h3 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: '0 0 10px' }}>{s.title}</h3>
+                <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.65, margin: 0 }}>{s.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 5. SOCIAL PROOF STATS */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-black/20 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white">
-              Trusted by Thousands
+      {/* ══ TESTIMONIALS ════════════════════════════════════════════ */}
+      <section id="testimonials" style={{ background: '#0a0a0a', padding: '96px 24px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <p style={{ fontSize: 12, fontWeight: 800, color: ACCENT, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 12 }}>REAL RESULTS</p>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: 'white', margin: '0 0 12px', letterSpacing: '-1px' }}>
+              Stories That Speak for Us
             </h2>
-            <p className="text-lg sm:text-xl text-gray-400">
-              Join our growing community of successful learners
-            </p>
+            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.4)' }}>Real learners. Real careers. Real results.</p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-            {stats.map((stat, index) => (
-              <div 
-                key={index}
-                className="text-center p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/0 border border-white/10 hover:border-purple-500/50 transform hover:scale-105 transition-all duration-300"
-              >
-                <div className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-                  {stat.value}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+            {testimonials.map((t, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: 32, transition: 'all 0.3s' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = `${ACCENT}40`; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                <div style={{ display: 'flex', gap: 2, marginBottom: 20 }}>
+                  {[...Array(t.rating)].map((_, j) => <span key={j} style={{ color: '#fbbf24', fontSize: 16 }}>★</span>)}
                 </div>
-                <div className="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. TESTIMONIALS SECTION */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              What Our Learners Say
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-400">
-              Real success stories from our community
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={index}
-                className="group p-6 sm:p-8 bg-gradient-to-br from-white/10 to-white/0 backdrop-blur-sm border border-white/10 rounded-2xl sm:rounded-3xl hover:border-purple-500/50 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20"
-              >
-                {/* Stars */}
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-400 text-lg sm:text-xl">⭐</span>
-                  ))}
-                </div>
-
-                {/* Testimonial Text */}
-                <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-6">
-                  "{testimonial.text}"
-                </p>
-
-                {/* Author */}
-                <div className="flex items-center gap-3 pt-4 border-t border-white/10">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xl sm:text-2xl">
-                    {testimonial.avatar}
-                  </div>
+                <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.7)', lineHeight: 1.75, margin: '0 0 28px', fontStyle: 'italic' }}>"{t.text}"</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 20 }}>
+                  <div style={{ width: 46, height: 46, borderRadius: '50%', background: `linear-gradient(135deg, ${ACCENT2}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>{t.avatar}</div>
                   <div>
-                    <div className="font-bold text-sm sm:text-base text-white">{testimonial.name}</div>
-                    <div className="text-xs sm:text-sm text-gray-400">{testimonial.role}</div>
+                    <div style={{ fontWeight: 800, color: 'white', fontSize: 14 }}>{t.name}</div>
+                    <div style={{ fontSize: 12, color: ACCENT, fontWeight: 600 }}>{t.role}</div>
                   </div>
                 </div>
               </div>
@@ -439,105 +343,82 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* 7. FINAL CTA SECTION */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-black/20 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="p-8 sm:p-12 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl sm:rounded-3xl shadow-2xl shadow-purple-500/20">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Ready to Transform Your Skills?
-            </h2>
-            <p className="text-base sm:text-xl text-gray-300 mb-6 sm:mb-8 leading-relaxed">
-              Join thousands of learners who are already mastering new skills with SkillForge's AI-powered platform. Start your journey today — completely free!
-            </p>
-            <Button 
-              onClick={handleGetStarted}
-              className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 sm:px-12 py-5 sm:py-6 text-base sm:text-lg rounded-xl shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transform hover:scale-105 transition-all duration-300"
-            >
-              Start Learning Now →
-            </Button>
-            <p className="mt-4 text-xs sm:text-sm text-gray-400">
-              No credit card required • Free forever • Cancel anytime
-            </p>
+      {/* ══ FINAL CTA ═══════════════════════════════════════════════ */}
+      <section style={{ background: '#000', padding: '100px 24px', textAlign: 'center', position: 'relative', overflow: 'hidden', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 400, borderRadius: '50%', background: `radial-gradient(ellipse, ${ACCENT}18 0%, transparent 70%)`, pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'white', margin: '0 0 20px', letterSpacing: '-1.5px', lineHeight: 1.1 }}>
+            Your Career Starts<br />
+            <span style={{ color: ACCENT }}>Right Now.</span>
+          </h2>
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)', margin: '0 0 44px', lineHeight: 1.6 }}>
+            Join thousands of learners building job-ready skills every day on SkillForge. Free to start, zero risk.
+          </p>
+          <button onClick={goLogin} style={{ background: ACCENT, color: 'white', border: 'none', padding: '18px 52px', borderRadius: 16, cursor: 'pointer', fontSize: 18, fontWeight: 900, boxShadow: `0 8px 40px ${ACCENT}55`, transition: 'all 0.3s', letterSpacing: '0.01em' }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.04)'; e.currentTarget.style.boxShadow = `0 16px 56px ${ACCENT}70`; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = `0 8px 40px ${ACCENT}55`; }}>
+            Start Learning for Free →
+          </button>
+          <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center', gap: 28, flexWrap: 'wrap' }}>
+            {['✓ No credit card', '✓ Free forever plan', '✓ AI mentor included', '✓ Certificates included'].map((t, i) => (
+              <span key={i} style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontWeight: 600 }}>{t}</span>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing & FAQ Placeholders */}
-      <div id="pricing" className="h-20" />
-      <div id="faq" className="h-20" />
-
-      {/* 8. FOOTER */}
-      <footer className="py-8 sm:py-12 px-4 sm:px-6 border-t border-white/10 bg-black/40 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-            {/* Brand */}
-            <div className="col-span-full lg:col-span-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
-                  <span className="text-lg font-bold">SF</span>
+      {/* ══ FOOTER ══════════════════════════════════════════════════ */}
+      <footer style={{ background: '#000', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '64px 24px 32px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48, marginBottom: 52 }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT2}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ color: 'white', fontWeight: 900, fontSize: 14 }}>SF</span>
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  SkillForge
-                </span>
+                <span style={{ fontWeight: 900, fontSize: 18, color: 'white' }}>SkillForge</span>
               </div>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                AI-powered learning platform helping you master any skill with precision and efficiency.
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.75, maxWidth: 260, margin: '0 0 20px' }}>
+                AI-powered tech learning platform helping you go from student to job-ready developer — faster and smarter.
               </p>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 50, padding: '5px 12px' }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#10b981' }} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.5)' }}>All systems operational</span>
+              </div>
             </div>
-
-            {/* Links */}
-            <div>
-              <h3 className="font-bold text-white mb-4">Product</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#features" className="hover:text-purple-400 transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-purple-400 transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Roadmap</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Changelog</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-white mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-purple-400 transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Contact</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-white mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Cookie Policy</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">GDPR</a></li>
-              </ul>
-            </div>
+            {[
+              { title: 'Product', links: ['Features', 'Pricing', 'Roadmap', 'Changelog'] },
+              { title: 'Company', links: ['About Us', 'Blog', 'Careers', 'Contact'] },
+              { title: 'Legal', links: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'GDPR'] },
+            ].map((col, i) => (
+              <div key={i}>
+                <h4 style={{ fontSize: 12, fontWeight: 800, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 18 }}>{col.title}</h4>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {col.links.map((l, j) => (
+                    <li key={j}><a href="#" style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', fontWeight: 500, transition: 'color 0.2s' }}
+                      onMouseEnter={e => e.target.style.color = 'white'} onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.45)'}>{l}</a></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
-
-          {/* Bottom Bar */}
-          <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-gray-400">
-              © 2026 SkillForge AI. All rights reserved.
-            </div>
-            <div className="flex items-center gap-6">
-              <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-              </a>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 28, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>© 2026 SkillForge AI · Made with ❤️ for learners everywhere</span>
+            <div style={{ display: 'flex', gap: 20 }}>
+              {['Twitter', 'GitHub', 'LinkedIn', 'Discord'].map(s => (
+                <a key={s} href="#" style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'none', fontWeight: 600, transition: 'color 0.2s' }}
+                  onMouseEnter={e => e.target.style.color = ACCENT} onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.25)'}>{s}</a>
+              ))}
             </div>
           </div>
         </div>
       </footer>
+
+      <style>{`
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes glow { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+      `}</style>
     </div>
   );
-};
-
-export default LandingPage;
+}

@@ -26,109 +26,7 @@ const topicService = new TopicServices();
 const domainService = new DomainService();
 const appwriteAccount = new AppwriteAccount();
 
-// Dummy topics data (will be replaced by backend data if available)
-const DUMMY_TOPICS = [
-  {
-    id: "1",
-    title: "Introduction to React",
-    description: "Learn the fundamentals of React including components, props, and state",
-    duration: "45 min",
-    difficulty: "Beginner",
-    completed: true,
-    locked: false,
-    order: 1,
-  },
-  {
-    id: "2",
-    title: "React Hooks Deep Dive",
-    description: "Master useState, useEffect, useContext, and custom hooks",
-    duration: "60 min",
-    difficulty: "Intermediate",
-    completed: true,
-    locked: false,
-    order: 2,
-  },
-  {
-    id: "3",
-    title: "State Management with Redux",
-    description: "Learn Redux Toolkit for managing complex application state",
-    duration: "90 min",
-    difficulty: "Advanced",
-    completed: false,
-    locked: false,
-    order: 3,
-  },
-  {
-    id: "4",
-    title: "React Router & Navigation",
-    description: "Build multi-page applications with React Router v6",
-    duration: "50 min",
-    difficulty: "Intermediate",
-    completed: false,
-    locked: false,
-    order: 4,
-  },
-  {
-    id: "5",
-    title: "API Integration & Data Fetching",
-    description: "Work with REST APIs, fetch data, and handle loading states",
-    duration: "70 min",
-    difficulty: "Intermediate",
-    completed: false,
-    locked: false,
-    order: 5,
-  },
-  {
-    id: "6",
-    title: "Form Handling & Validation",
-    description: "Create forms with validation using Formik and Yup",
-    duration: "55 min",
-    difficulty: "Intermediate",
-    completed: false,
-    locked: false,
-    order: 6,
-  },
-  {
-    id: "7",
-    title: "Performance Optimization",
-    description: "Optimize React apps with memoization, lazy loading, and code splitting",
-    duration: "80 min",
-    difficulty: "Advanced",
-    completed: false,
-    locked: false,
-    order: 7,
-  },
-  {
-    id: "8",
-    title: "Testing React Applications",
-    description: "Write unit and integration tests with Jest and React Testing Library",
-    duration: "75 min",
-    difficulty: "Advanced",
-    completed: false,
-    locked: false,
-    order: 8,
-  },
-  {
-    id: "9",
-    title: "Advanced Patterns & Best Practices",
-    description: "Learn compound components, render props, and HOCs",
-    duration: "65 min",
-    difficulty: "Advanced",
-    completed: false,
-    locked: true,
-    order: 9,
-  },
-  {
-    id: "10",
-    title: "Building a Full-Stack Project",
-    description: "Create a complete application combining all learned concepts",
-    duration: "120 min",
-    difficulty: "Expert",
-    completed: false,
-    locked: true,
-    order: 10,
-  },
-];
+
 
 const UserTopics = () => {
   const { domainId } = useParams();
@@ -152,19 +50,11 @@ const UserTopics = () => {
       // Load topics
       const res = await topicService.getTopicsByDomain(domainId);
 
-      // If backend has data, use it; otherwise use dummy data
-      if (res.rows && res.rows.length > 0) {
-        setTopics(res.rows);
-      } else {
-        // Use dummy data
-        setTopics(DUMMY_TOPICS);
-        toast.info("Showing sample topics");
-      }
+      // Use real backend data only
+      setTopics(res.rows || []);
     } catch (err) {
       console.error("Failed to load topics", err);
-      // Fallback to dummy data on error
-      setTopics(DUMMY_TOPICS);
-      toast.error("Using sample data");
+      toast.error("Failed to load topics. Please try again.");
     } finally {
       setLoading(false);
     }

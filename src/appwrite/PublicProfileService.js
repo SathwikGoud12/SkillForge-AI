@@ -60,8 +60,6 @@ class PublicProfileService {
                 linkedinUrl: userData.linkedinUrl || "",
                 githubUrl: userData.githubUrl || "",
                 portfolioUrl: userData.portfolioUrl || "",
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
             };
 
             return await db.createRow(USER_PROFILES_TABLE_ID, profileData);
@@ -85,10 +83,7 @@ class PublicProfileService {
                 updates.skills = JSON.stringify(updates.skills);
             }
 
-            const updateData = {
-                ...updates,
-                updatedAt: new Date().toISOString()
-            };
+            const updateData = { ...updates };
 
             return await db.updateRow(USER_PROFILES_TABLE_ID, profile.$id, updateData);
         } catch (error) {
