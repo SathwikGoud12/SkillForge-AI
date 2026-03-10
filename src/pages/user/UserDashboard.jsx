@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import {
-  Flame,
   BookOpen,
   Zap,
   Target,
   Award,
-  Clock,
   CheckCircle2,
   TrendingUp,
   Sparkles,
-  ChevronRight,
-  LogOut,
   Star,
-  Users,
   FileText,
   ArrowRight,
+  ChevronRight,
   Rocket,
-  Heart,
+  LogOut,
+  Flame,
+  Clock,
 } from "lucide-react";
 
 import AppwriteAccount from "@/appwrite/Account.services";
@@ -262,34 +260,142 @@ const UserDashBoard = () => {
         </motion.div>
       )}
 
-      {/* Header */}
+      {/* ─── HERO HEADER ───────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white sticky top-0 z-40 shadow-lg"
+        className="relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #0f0c29 0%, #1a1040 40%, #16213e 70%, #0d1b2a 100%)" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-4xl font-bold mb-2">
-                {getGreeting()}, {profile?.name || user?.name} 👋
-              </h1>
-              <p className="text-purple-200 flex items-center gap-2">
-                <Target className="w-4 h-4" />
-                Preparing for: {profile?.targetRole || "Not set"}
-              </p>
+        {/* Animated background particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: Math.random() * 4 + 2,
+                height: Math.random() * 4 + 2,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                background: i % 3 === 0 ? "#6366f1" : i % 3 === 1 ? "#a855f7" : "#06b6d4",
+                opacity: 0.4,
+              }}
+              animate={{ y: [0, -15, 0], opacity: [0.2, 0.6, 0.2] }}
+              transition={{ duration: 3 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 3 }}
+            />
+          ))}
+          {/* Large glow blobs */}
+          <div className="absolute top-0 left-1/3 w-80 h-80 rounded-full blur-3xl" style={{ background: "rgba(99,102,241,0.15)" }} />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full blur-3xl" style={{ background: "rgba(168,85,247,0.12)" }} />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="flex items-center justify-between flex-wrap gap-6">
+            {/* Left: greeting + info */}
+            <div className="flex items-center gap-5">
+              {/* Avatar with ring */}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="relative flex-shrink-0"
+              >
+                <div
+                  className="w-18 h-18 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-2xl"
+                  style={{
+                    width: 72, height: 72,
+                    background: "linear-gradient(135deg, #6366f1, #a855f7)"
+                  }}
+                >
+                  {(profile?.name || user?.name || "U").substring(0, 2).toUpperCase()}
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-400 rounded-full border-2 flex items-center justify-center"
+                  style={{ borderColor: "#1a1040" }}>
+                  <div className="w-2 h-2 bg-emerald-300 rounded-full animate-ping" />
+                </div>
+              </motion.div>
+
+              {/* Text */}
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(99,102,241,0.25)", color: "#a78bfa" }}>
+                    ✦ {getGreeting()}
+                  </span>
+                </div>
+                <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+                  {profile?.name || user?.name || "Learner"} 👋
+                </h1>
+                <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                  <div className="flex items-center gap-1.5">
+                    <Target className="w-3.5 h-3.5 text-indigo-400" />
+                    <span className="text-sm text-indigo-200 font-medium">
+                      {profile?.targetRole || "Set your target role"}
+                    </span>
+                  </div>
+                  <span className="text-white/20">·</span>
+                  <div className="flex items-center gap-1.5">
+                    <Flame className="w-3.5 h-3.5 text-orange-400" />
+                    <span className="text-sm text-orange-200 font-medium">{streak} day streak</span>
+                  </div>
+                  <span className="text-white/20">·</span>
+                  <div className="flex items-center gap-1.5">
+                    <Star className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-sm text-amber-200 font-medium">{totalPoints} XP</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleLogout}
-              className="flex items-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-200 px-4 py-2 rounded-xl transition-all"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </motion.button>
+            {/* Right: XP bar + logout */}
+            <div className="flex items-center gap-4">
+              {/* XP Level mini card */}
+              <div className="hidden sm:block rounded-2xl p-4 text-right" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <p className="text-[10px] font-black uppercase tracking-widest text-indigo-300 mb-1">Total XP</p>
+                <p className="text-2xl font-black text-white">{totalPoints}</p>
+                <div className="mt-2 w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min((totalPoints % 500) / 500 * 100, 100)}%` }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                    className="h-full rounded-full"
+                    style={{ background: "linear-gradient(90deg, #6366f1, #a855f7)" }}
+                  />
+                </div>
+                <p className="text-[10px] text-white/40 mt-1">{500 - (totalPoints % 500)} XP to next level</p>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all"
+                style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)", color: "#fca5a5" }}
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Bottom quick stat pills */}
+          <div className="flex items-center gap-3 mt-6 flex-wrap">
+            {[
+              { label: `${topicsCompleted} Topics Done`, color: "rgba(99,102,241,0.2)", border: "rgba(99,102,241,0.4)", text: "#a78bfa" },
+              { label: `${progress.length} Assessments`, color: "rgba(16,185,129,0.15)", border: "rgba(16,185,129,0.35)", text: "#6ee7b7" },
+              { label: `${hoursTaught}h Learning`, color: "rgba(245,158,11,0.15)", border: "rgba(245,158,11,0.35)", text: "#fcd34d" },
+              { label: `${enrolledDomains.length} Domains`, color: "rgba(139,92,246,0.15)", border: "rgba(139,92,246,0.35)", text: "#c4b5fd" },
+            ].map((pill, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold"
+                style={{ background: pill.color, border: `1px solid ${pill.border}`, color: pill.text }}
+              >
+                {pill.label}
+              </motion.span>
+            ))}
           </div>
         </div>
       </motion.div>
@@ -301,85 +407,101 @@ const UserDashBoard = () => {
         animate="visible"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8"
       >
-        {/* Streak & Gamification */}
-        <motion.div
-          variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
+        {/* ─── GAMIFICATION CARDS ──────────────────────────────── */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Streak Card */}
-          <div className="bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl p-6 text-white shadow-xl hover:shadow-2xl transition-all">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-100 text-sm font-medium mb-1">
-                  Current Streak
-                </p>
-                <h2 className="text-5xl font-bold">{streak}</h2>
-                <p className="text-orange-100 mt-2">
-                  🔥 Days of learning
-                </p>
-                <p className="text-xs text-orange-200 mt-2">
-                  Come back tomorrow to keep your streak alive!
-                </p>
+          <motion.div
+            whileHover={{ y: -4, scale: 1.01 }}
+            className="relative rounded-3xl p-6 text-white overflow-hidden shadow-xl"
+            style={{ background: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)" }}
+          >
+            <div className="absolute inset-0 opacity-10" style={{ background: "radial-gradient(circle at 80% 20%, white, transparent 60%)" }} />
+            <div className="relative z-10">
+              <p className="text-orange-100 text-xs font-bold uppercase tracking-widest mb-3">🔥 Current Streak</p>
+              <div className="flex items-end justify-between">
+                <div>
+                  <h2 className="text-6xl font-black leading-none">{streak}</h2>
+                  <p className="text-orange-100 text-sm mt-1 font-semibold">days learning</p>
+                </div>
+                <Flame className="w-16 h-16 opacity-30" />
               </div>
-              <Flame className="w-20 h-20 opacity-80" />
+              <div className="mt-4 flex gap-1">
+                {[...Array(7)].map((_, i) => (
+                  <div key={i} className={`flex-1 h-1.5 rounded-full ${i < streak % 7 ? 'bg-white' : 'bg-white/20'}`} />
+                ))}
+              </div>
+              <p className="text-orange-200 text-xs mt-2">Weekly progress</p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Points Card */}
-          <div className="bg-gradient-to-br from-purple-400 to-indigo-600 rounded-3xl p-6 text-white shadow-xl hover:shadow-2xl transition-all">
-            <div className="flex items-center justify-between">
+          <motion.div
+            whileHover={{ y: -4, scale: 1.01 }}
+            className="relative rounded-3xl p-6 text-white overflow-hidden shadow-xl"
+            style={{ background: "linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)" }}
+          >
+            <div className="absolute inset-0 opacity-10" style={{ background: "radial-gradient(circle at 80% 20%, white, transparent 60%)" }} />
+            <div className="relative z-10">
+              <p className="text-purple-100 text-xs font-bold uppercase tracking-widest mb-3">⭐ Total Points</p>
+              <div className="flex items-end justify-between">
+                <div>
+                  <motion.h2
+                    key={totalPoints}
+                    initial={{ scale: 1.2 }}
+                    animate={{ scale: 1 }}
+                    className="text-6xl font-black leading-none"
+                  >
+                    {totalPoints}
+                  </motion.h2>
+                  <p className="text-purple-100 text-sm mt-1 font-semibold">XP earned</p>
+                </div>
+                <Star className="w-16 h-16 opacity-30" />
+              </div>
+              <div className="mt-4">
+                <div className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min((totalPoints % 500) / 500 * 100, 100)}%` }}
+                    transition={{ duration: 1 }}
+                    className="h-full bg-white rounded-full"
+                  />
+                </div>
+                <p className="text-purple-200 text-xs mt-1.5">{500 - (totalPoints % 500)} XP to next level</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Continue Learning Card */}
+          <motion.div
+            whileHover={{ y: -4, scale: 1.01 }}
+            className="relative rounded-3xl p-6 text-white overflow-hidden shadow-xl cursor-pointer"
+            style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)" }}
+            onClick={() => navigate(enrolledDomains.length > 0 ? `/user/domains/${enrolledDomains[0]?.$id}/topics` : "/user/domains")}
+          >
+            <div className="absolute inset-0 opacity-10" style={{ background: "radial-gradient(circle at 80% 20%, white, transparent 60%)" }} />
+            <div className="relative z-10 flex flex-col h-full justify-between">
               <div>
-                <p className="text-purple-100 text-sm font-medium mb-1">
-                  Total Points
+                <p className="text-cyan-100 text-xs font-bold uppercase tracking-widest mb-3">
+                  {enrolledDomains.length > 0 ? "▶ Continue Learning" : "🎯 Get Started"}
                 </p>
-                <h2 className="text-5xl font-bold">{totalPoints}</h2>
-                <p className="text-purple-100 mt-2">
-                  ⭐ Keep going, you're awesome!
-                </p>
-                <p className="text-xs text-purple-200 mt-2">
-                  Complete topics to earn more points
+                <h2 className="text-2xl font-black leading-tight">
+                  {enrolledDomains.length > 0 ? enrolledDomains[0]?.title || "Your Course" : "Explore Domains"}
+                </h2>
+                <p className="text-cyan-100 text-sm mt-1">
+                  {enrolledDomains.length > 0 ? "Pick up where you left off" : "Start your learning journey"}
                 </p>
               </div>
-              <Star className="w-20 h-20 opacity-80" />
+              <motion.div
+                whileHover={{ x: 4 }}
+                className="flex items-center gap-2 mt-4 bg-white/20 rounded-xl px-4 py-2 w-fit font-bold text-sm"
+              >
+                {enrolledDomains.length > 0 ? "Resume" : "Explore"}
+                <ChevronRight className="w-4 h-4" />
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
-        {/* Primary Action */}
-        <motion.div
-          variants={itemVariants}
-          className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl p-8 text-white shadow-2xl hover:shadow-3xl transition-all"
-        >
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">
-                {enrolledDomains.length > 0
-                  ? "▶ Continue Learning"
-                  : "🎯 Start Your Learning Journey"}
-              </h2>
-              <p className="text-blue-100 mb-4">
-                {enrolledDomains.length > 0
-                  ? `Pick up where you left off - ${enrolledDomains[0]?.title || ""}`
-                  : "Choose a domain to begin your skill development"}
-              </p>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() =>
-                navigate(
-                  enrolledDomains.length > 0
-                    ? `/user/domains/${enrolledDomains[0]?.$id}/topics`
-                    : "/user/domains"
-                )
-              }
-              className="bg-white text-blue-600 font-bold px-8 py-4 rounded-xl hover:bg-blue-50 transition-all flex items-center gap-2 whitespace-nowrap"
-            >
-              {enrolledDomains.length > 0 ? "Resume" : "Explore Domains"}
-              <ChevronRight className="w-5 h-5" />
-            </motion.button>
-          </div>
-        </motion.div>
 
         {/* Solar System Navigation */}
         <motion.div variants={itemVariants}>
@@ -541,65 +663,50 @@ const UserDashBoard = () => {
           </motion.div>
         )}
 
-        {/* Quick Actions */}
+        {/* Daily Learning Milestones - REPLACING Quick Actions */}
         <motion.div variants={itemVariants}>
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <Zap className="w-6 h-6 text-yellow-500" />
-            Quick Actions
-          </h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+              <Zap className="w-6 h-6 text-amber-500 fill-amber-500" />
+              Daily Learning Milestones
+            </h3>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Restarting in 12h</span>
+          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <motion.button
-              whileHover={{ scale: 1.08, y: -4 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all text-center group"
-            >
-              <motion.div whileHover={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.3 }}>
-                <FileText className="w-8 h-8 text-blue-500 mx-auto mb-2 group-hover:text-blue-600" />
-              </motion.div>
-              <p className="font-semibold text-slate-900">Notes</p>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.08, y: -4 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all text-center group"
-            >
-              <motion.div whileHover={{ scale: 1.2 }} transition={{ type: "spring" }}>
-                <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-2 group-hover:text-green-600" />
-              </motion.div>
-              <p className="font-semibold text-slate-900">MCQs</p>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.08, y: -4 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all text-center group"
-            >
-              <motion.div whileHover={{ rotate: [0, -15, 15, -15, 0] }} transition={{ duration: 0.5 }}>
-                <Award className="w-8 h-8 text-yellow-500 mx-auto mb-2 group-hover:text-yellow-600" />
-              </motion.div>
-              <p className="font-semibold text-slate-900">Assessments</p>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.08, y: -4 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                const el = document.getElementById('ai-roadmap-section');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all text-center group"
-            >
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              { title: "Review Notes", desc: "Spend 10m on your notes", progress: 60, icon: FileText, color: "blue" },
+              { title: "Take a Quiz", desc: "Test your knowledge", progress: 0, icon: CheckCircle2, color: "emerald" },
+              { title: "Complete Topic", desc: "Master a full concept", progress: 100, icon: Target, color: "violet" },
+              { title: "AI Mentorship", desc: "Chat with AI Mentor", progress: 40, icon: Sparkles, color: "fuchsia" },
+            ].map((milestone, i) => (
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                whileHover={{ scale: 1.2 }}
+                key={i}
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-[2rem] p-6 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group"
               >
-                <Sparkles className="w-8 h-8 text-purple-500 mx-auto mb-2 group-hover:text-purple-600" />
+                <div className={`w-14 h-14 rounded-2xl bg-${milestone.color}-50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <milestone.icon className={`w-7 h-7 text-${milestone.color}-600`} />
+                </div>
+                <h4 className="text-lg font-black text-slate-900 leading-tight mb-1">{milestone.title}</h4>
+                <p className="text-xs text-slate-500 font-medium mb-4">{milestone.desc}</p>
+                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-auto">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${milestone.progress}%` }}
+                    className={`h-full bg-gradient-to-r ${milestone.color === 'blue' ? 'from-blue-500 to-indigo-500' :
+                      milestone.color === 'emerald' ? 'from-emerald-500 to-teal-500' :
+                        milestone.color === 'violet' ? 'from-violet-500 to-purple-500' :
+                          'from-fuchsia-500 to-pink-500'
+                      }`}
+                  />
+                </div>
+                <div className="flex justify-between w-full mt-2">
+                  <span className="text-[10px] font-black text-slate-400 uppercase">{milestone.progress === 100 ? "Done" : "Ongoing"}</span>
+                  <span className="text-[10px] font-black text-slate-900">{milestone.progress}%</span>
+                </div>
               </motion.div>
-              <p className="font-semibold text-slate-900">AI Path</p>
-            </motion.button>
+            ))}
           </div>
         </motion.div>
 
@@ -609,112 +716,353 @@ const UserDashBoard = () => {
           variants={itemVariants}
           className="pt-8"
         >
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <Rocket className="w-6 h-6 text-purple-600" />
-            AI Career Roadmap
-          </h3>
-          <AILearningRoadmap
-            domain={{ name: profile?.targetRole || enrolledDomains[0]?.title || "Full Stack Development" }}
-            userProfile={{ level: profile?.level || "beginner", goals: [profile?.targetRole] }}
-          />
-        </motion.div>
+          <div className="relative rounded-[3rem] overflow-hidden shadow-2xl">
+            {/* Dark gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950" />
 
-        {/* Leaderboard */}
-        <motion.div variants={itemVariants}>
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <Users className="w-6 h-6 text-red-500" />
-            This Week's Leaderboard
-          </h3>
+            {/* Glowing orbs */}
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl -mt-24" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl mb-[-6rem]" />
+            <div className="absolute top-1/2 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl" />
 
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div className="divide-y">
-              {leaderboard.map((entry, index) => (
-                <motion.div
-                  key={entry.rank}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`p-6 flex items-center justify-between ${index === 2 ? "bg-purple-50" : ""
-                    }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${index === 0
-                        ? "bg-yellow-500"
-                        : index === 1
-                          ? "bg-gray-400"
-                          : index === 2
-                            ? "bg-orange-600"
-                            : "bg-slate-400"
-                        }`}
-                    >
-                      {entry.rank}
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900">{entry.name}</p>
-                      {index === 2 && (
-                        <p className="text-xs text-purple-600">
-                          That's you! 🎯
-                        </p>
-                      )}
-                    </div>
+            {/* Content */}
+            <div className="relative z-10 p-8 lg:p-12">
+              {/* Section Header */}
+              <div className="flex items-center gap-4 mb-10">
+                <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-indigo-900/50">
+                  <Rocket className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="w-4 h-4 text-indigo-400" />
+                    <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">
+                      AI-Powered
+                    </span>
                   </div>
-                  <p className="text-2xl font-bold text-slate-900">
-                    {entry.points}
+                  <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-purple-300">
+                    Career Roadmap
+                  </h3>
+                  <p className="text-sm text-indigo-300 mt-0.5">
+                    Personalized for: <span className="font-bold text-white">{profile?.targetRole || enrolledDomains[0]?.title || "Your Journey"}</span>
                   </p>
-                </motion.div>
-              ))}
+                </div>
+              </div>
+
+              {/* Roadmap Component — wrapped for dark bg contrast */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/10">
+                <AILearningRoadmap
+                  domain={{ name: profile?.targetRole || enrolledDomains[0]?.title || "Full Stack Development" }}
+                  userProfile={{ level: (profile?.skillLevel || "beginner").toLowerCase(), goals: [profile?.targetRole].filter(Boolean) }}
+                />
+              </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Certificates Section */}
-        <motion.div variants={itemVariants}>
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <Award className="w-6 h-6 text-yellow-600" />
-            Your Certificates
-          </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((cert, idx) => (
-              <motion.div
-                key={cert}
-                initial={{ opacity: 0, rotateY: -90 }}
-                animate={{ opacity: 1, rotateY: 0 }}
-                transition={{ delay: idx * 0.2 }}
+
+        {/* ─── CONTINUE LEARNING ───────────────────────────────────────── */}
+        <motion.div variants={itemVariants}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+                <BookOpen className="w-6 h-6 text-indigo-600" />
+                Continue Learning
+              </h3>
+              <p className="text-slate-500 text-sm mt-1">Pick up right where you left off</p>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate("/user/domains")}
+              className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+            >
+              All Domains
+              <ArrowRight className="w-4 h-4" />
+            </motion.button>
+          </div>
+
+          {enrolledDomains.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              {enrolledDomains.slice(0, 3).map((domain, idx) => {
+                const progressPct = domain.progressPct || 0;
+                const gradients = [
+                  'from-indigo-500 to-purple-600',
+                  'from-emerald-500 to-teal-600',
+                  'from-orange-500 to-red-500',
+                ];
+                const gradient = gradients[idx % gradients.length];
+                return (
+                  <motion.div
+                    key={domain.$id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
+                    className="bg-white rounded-3xl border border-slate-100 shadow-lg overflow-hidden flex flex-col"
+                  >
+                    {/* Top color bar */}
+                    <div className={`h-2 bg-gradient-to-r ${gradient}`} />
+
+                    <div className="p-6 flex-1 flex flex-col gap-4">
+                      <div className="flex items-start gap-4">
+                        {domain.imageUrl ? (
+                          <img src={domain.imageUrl} alt={domain.title} className="w-14 h-14 rounded-2xl object-cover shadow-md flex-shrink-0" />
+                        ) : (
+                          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center flex-shrink-0 shadow-md`}>
+                            <BookOpen className="w-7 h-7 text-white" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-black text-slate-900 text-lg leading-tight truncate">{domain.title}</h4>
+                          <p className="text-slate-500 text-xs mt-1 line-clamp-2">{domain.description}</p>
+                        </div>
+                      </div>
+
+                      {/* Progress */}
+                      <div>
+                        <div className="flex justify-between text-xs font-bold text-slate-500 mb-2">
+                          <span>Progress</span>
+                          <span className="text-slate-800">{progressPct}%</span>
+                        </div>
+                        <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progressPct}%` }}
+                            transition={{ duration: 0.8, delay: idx * 0.15 }}
+                            className={`h-full bg-gradient-to-r ${gradient} rounded-full`}
+                          />
+                        </div>
+                        <p className="text-[11px] text-slate-400 mt-1.5">
+                          {progressPct === 0 ? "Not started yet" : progressPct === 100 ? "🎉 Completed!" : `${100 - progressPct}% remaining`}
+                        </p>
+                      </div>
+
+                      {/* Resume button */}
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => navigate(`/user/domains/${domain.$id}/topics`)}
+                        className={`w-full py-3 bg-gradient-to-r ${gradient} text-white rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-md mt-auto`}
+                      >
+                        {progressPct === 0 ? "Start Learning" : progressPct === 100 ? "Review Domain" : "Continue Learning"}
+                        <ArrowRight className="w-4 h-4" />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-12 text-center border-2 border-dashed border-indigo-200"
+            >
+              <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-10 h-10 text-indigo-400" />
+              </div>
+              <h4 className="text-xl font-black text-slate-800 mb-2">No Domains Enrolled Yet</h4>
+              <p className="text-slate-500 text-sm mb-6">Start your learning journey by exploring available domains</p>
+              <motion.button
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl shadow-lg p-6 border-2 border-yellow-200 hover:shadow-xl transition-all cursor-pointer"
+                onClick={() => navigate("/user/domains")}
+                className="px-8 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200"
               >
-                <div className="flex items-center justify-between mb-4">
-                  <Award className="w-10 h-10 text-yellow-600" />
-                  <span className="text-xs text-yellow-700 font-semibold bg-yellow-100 px-2 py-1 rounded-full">
-                    Verified
-                  </span>
+                Explore Domains
+              </motion.button>
+            </motion.div>
+          )}
+        </motion.div>
+
+        {/* ─── QUICK ACCESS HUB ────────────────────────────────────────── */}
+        <motion.div variants={itemVariants}>
+          <div className="mb-6">
+            <h3 className="text-2xl font-black text-slate-900 flex items-center gap-2">
+              <Zap className="w-6 h-6 text-amber-500" />
+              Quick Access
+            </h3>
+            <p className="text-slate-500 text-sm mt-1">Jump to any feature instantly</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              {
+                label: "AI Assistant",
+                desc: "Chat with your AI tutor",
+                icon: Sparkles,
+                gradient: "from-violet-500 to-purple-600",
+                shadow: "shadow-violet-200",
+                route: "/user/ai-assistant",
+              },
+              {
+                label: "Take Assessment",
+                desc: "Test your knowledge",
+                icon: CheckCircle2,
+                gradient: "from-blue-500 to-cyan-500",
+                shadow: "shadow-blue-200",
+                route: "/user/domains",
+              },
+              {
+                label: "Study Materials",
+                desc: "PDFs, notes & resources",
+                icon: FileText,
+                gradient: "from-emerald-500 to-teal-500",
+                shadow: "shadow-emerald-200",
+                route: "/user/study-materials",
+              },
+              {
+                label: "Interview Prep",
+                desc: "Practice Q&A sessions",
+                icon: Target,
+                gradient: "from-orange-500 to-red-500",
+                shadow: "shadow-orange-200",
+                route: "/user/interview-questions",
+              },
+              {
+                label: "My Progress",
+                desc: "Track your learning",
+                icon: TrendingUp,
+                gradient: "from-pink-500 to-rose-500",
+                shadow: "shadow-pink-200",
+                route: "/user/progress",
+              },
+              {
+                label: "Certificates",
+                desc: "View your achievements",
+                icon: Award,
+                gradient: "from-amber-400 to-orange-500",
+                shadow: "shadow-amber-200",
+                route: "/user/certificates",
+              },
+              {
+                label: "All Domains",
+                desc: "Explore learning paths",
+                icon: BookOpen,
+                gradient: "from-indigo-500 to-blue-600",
+                shadow: "shadow-indigo-200",
+                route: "/user/domains",
+              },
+              {
+                label: "My Profile",
+                desc: "Edit your information",
+                icon: Star,
+                gradient: "from-slate-600 to-slate-800",
+                shadow: "shadow-slate-200",
+                route: "/user/profile",
+              },
+            ].map((item, idx) => (
+              <motion.button
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: idx * 0.05 }}
+                whileHover={{ y: -6, scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate(item.route)}
+                className={`bg-white rounded-3xl p-5 text-left border border-slate-100 shadow-lg ${item.shadow} hover:shadow-xl transition-all group flex flex-col gap-3`}
+              >
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
+                  <item.icon className="w-6 h-6 text-white" />
                 </div>
-                <h4 className="font-bold text-slate-900 mb-2">
-                  Certificate #{cert}
-                </h4>
-                <p className="text-sm text-slate-600 mb-4">
-                  Completed with excellence
-                </p>
-                <button className="text-yellow-700 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">
-                  View Certificate <ArrowRight className="w-4 h-4" />
-                </button>
-              </motion.div>
+                <div>
+                  <p className="font-black text-slate-900 text-sm">{item.label}</p>
+                  <p className="text-xs text-slate-400 mt-0.5 leading-tight">{item.desc}</p>
+                </div>
+              </motion.button>
             ))}
           </div>
         </motion.div>
-      </motion.div>
 
-      {/* Footer */}
-      <motion.div
-        className="bg-gradient-to-r from-slate-900 to-slate-800 text-slate-400 py-8 mt-16 text-center relative overflow-hidden"
-      >
-        <div className="absolute inset-0 opacity-10 bg-gradient-to-r from-purple-500 to-blue-500"></div>
-        <div className="relative z-10">
-          <p className="font-semibold">Keep learning, keep growing! 🚀</p>
-          <p className="text-xs mt-2">Made with ❤️ for learners worldwide</p>
-        </div>
+        {/* ─── FOOTER ──────────────────────────────────────── */}
+        <motion.div
+          variants={itemVariants}
+          className="relative rounded-3xl overflow-hidden mt-4"
+          style={{ background: "linear-gradient(135deg, #0f0c29 0%, #1a1040 50%, #24243e 100%)" }}
+        >
+          {/* Glow orbs */}
+          <div className="absolute top-0 left-1/4 w-64 h-64 rounded-full blur-3xl pointer-events-none"
+            style={{ background: "rgba(99,102,241,0.12)" }} />
+          <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full blur-3xl pointer-events-none"
+            style={{ background: "rgba(168,85,247,0.10)" }} />
+
+          <div className="relative z-10 px-8 py-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              {/* Brand */}
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
+                    style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-black text-lg leading-none">
+                      Skill<span style={{ color: "#a78bfa" }}>Forge</span>
+                    </h3>
+                    <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-widest">AI Platform</p>
+                  </div>
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  Your personalized AI-powered learning platform to master any skill and accelerate your career.
+                </p>
+              </div>
+
+              {/* Quick Links */}
+              <div>
+                <h4 className="text-indigo-300 font-bold text-xs uppercase tracking-widest mb-4">Quick Links</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { label: "Dashboard", path: "/user" },
+                    { label: "Domains", path: "/user/domains" },
+                    { label: "Progress", path: "/user/progress" },
+                    { label: "AI Roadmap", path: "/user#ai-roadmap-section" },
+                    { label: "Certificates", path: "/user/certificates" },
+                    { label: "Profile", path: "/user/profile" },
+                  ].map((link) => (
+                    <motion.button
+                      key={link.path}
+                      whileHover={{ x: 3 }}
+                      onClick={() => navigate(link.path)}
+                      className="text-slate-400 hover:text-indigo-300 text-sm text-left transition-colors font-medium"
+                    >
+                      → {link.label}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stats/Motivational */}
+              <div>
+                <h4 className="text-indigo-300 font-bold text-xs uppercase tracking-widest mb-4">Your Journey</h4>
+                <div className="space-y-3">
+                  {[
+                    { emoji: "🚀", text: "Keep pushing your limits every day" },
+                    { emoji: "🧠", text: "AI-powered personalized learning" },
+                    { emoji: "🏆", text: "Earn verified certificates" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <span className="text-lg flex-shrink-0">{item.emoji}</span>
+                      <p className="text-slate-400 text-xs leading-relaxed">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom bar */}
+            <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <p className="text-slate-500 text-xs">
+                © 2026 SkillForge AI · Made with <span className="text-red-400">❤️</span> for learners worldwide
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-slate-500 text-xs font-semibold">All systems operational</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+
       </motion.div>
     </div>
   );

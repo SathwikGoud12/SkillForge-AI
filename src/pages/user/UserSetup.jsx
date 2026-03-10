@@ -12,11 +12,11 @@ import {
 } from "lucide-react";
 
 import AppwriteAccount from "@/appwrite/Account.services";
-import UserProfileService from "@/appwrite/UserProfileServices";
+import PublicProfileService from "@/appwrite/PublicProfileService";
 import DomainService from "@/appwrite/domainServices";
 
 const account = new AppwriteAccount();
-const profileService = new UserProfileService();
+const profileService = new PublicProfileService();
 const domainService = new DomainService();
 
 const ROLES = [
@@ -75,32 +75,22 @@ const UserSetup = () => {
     try {
       setLoading(true);
       const user = await account.getAppwriteUser();
-      const profileRes = await profileService.getProfileByUserId(user.$id);
-
       const roleObj = ROLES.find((r) => r.id === selectedRole);
       const levelObj = LEVELS.find((l) => l.id === selectedLevel);
 
-      const profileData = {
-        userId: user.$id,
-        name: user.name || "",
-        email: user.email,
+      // Save setup data to the userProfiles table
+      // Make sure these columns exist in Appwrite: skillLevel (String), enrolledDomains (String)
+      await profileService.updateProfile(user.$id, {
+        fullName: user.name || "",
         targetRole: roleObj.name,
         skillLevel: levelObj.name,
         enrolledDomains: selectedDomains.join(","),
-      };
-
-      if (profileRes.rows.length > 0) {
-        await profileService.updateProfile(
-          profileRes.rows[0].$id,
-          profileData
-        );
-      } else {
-        await profileService.createProfile(profileData);
-      }
+      });
 
       toast.success("Setup complete! Welcome to SkillForge 🎉");
       setTimeout(() => {
-        navigate("/user");
+        // Navigate to the first domain the user selected
+        navigate(`/user/domains/${selectedDomains[0]}/topics`);
       }, 1500);
     } catch (error) {
       console.error("Setup error:", error);
@@ -109,6 +99,7 @@ const UserSetup = () => {
       setLoading(false);
     }
   }
+
 
   const toggleDomain = (domainId) => {
     setSelectedDomains((prev) =>

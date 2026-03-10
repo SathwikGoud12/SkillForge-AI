@@ -27,6 +27,7 @@ import AddInterviewQuestion from "./pages/admin/AddInterViewQuestions";
 import AddAssessment from "./pages/admin/AddAssessment";
 import AddProject from "./pages/admin/AddProject";
 import AddDomainProject from "./pages/admin/AddDomainProject";
+import SeedData from "./pages/admin/SeedData";
 import UserDashBoard from "./pages/user/UserDashBoard";
 import UserDomains from "./pages/user/UserDomains";
 import UserLayout from "./pages/user/UserLayout";
@@ -38,6 +39,7 @@ import MyCertificates from "./pages/user/MyCertificates";
 import PublicProfile from "./pages/PublicProfile";
 import UserProfile from "./pages/user/UserProfile";
 import UserProgress from "./pages/user/UserProgress";
+import AIAssistant from "./pages/user/AIAssistant";
 import StudyMaterials from "./pages/user/StudyMaterials";
 import SubjectDetail from "./pages/user/SubjectDetail";
 import DoubtClearingSession from "./pages/user/DoubtClearingSession";
@@ -77,9 +79,11 @@ const router = createBrowserRouter([
           { index: true, element: <UserDashBoard /> },
           { path: "setup", element: <UserSetup /> },
           { path: "domains", element: <UserDomains /> },
+          { path: "seed-data", element: <SeedData /> },
           { path: "certificates", element: <MyCertificates /> },
           { path: "profile", element: <UserProfile /> },
           { path: "progress", element: <UserProgress /> },
+          { path: "ai-assistant", element: <AIAssistant /> },
           { path: "study-materials", element: <StudyMaterials /> },
           { path: "study-materials/subject/:subjectId", element: <SubjectDetail /> },
           { path: "study-materials/doubt-session/:subjectId", element: <DoubtClearingSession /> },
@@ -110,6 +114,7 @@ const router = createBrowserRouter([
           { index: true, element: <Overview /> },
           { path: "adddomain", element: <AddDomainForm /> },
           { path: "alldomains", element: <AllDomains /> },
+
           { path: "edit-domain/:id", element: <EditDomain /> },
           { path: "domains/:domainId/topics", element: <TopicsList /> },
           { path: "domains/:domainId/add-topic", element: <AddTopic /> },

@@ -1,4 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
+import {
+  BookOpen,
+  Layers,
+  FileText,
+  HelpCircle,
+  Rocket,
+  Users,
+  Zap,
+  TrendingUp,
+  RefreshCw
+} from "lucide-react";
 
 import DomainService from "@/appwrite/domainServices";
 import TopicServices from "@/appwrite/TopicServices";
@@ -32,6 +44,7 @@ const AdminOverview = () => {
 
   const [userGrowth, setUserGrowth] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchAdminStats = useCallback(async () => {
     try {
@@ -52,7 +65,6 @@ const AdminOverview = () => {
       ]);
 
       const rows = progressRes?.rows || [];
-
       const uniqueUsers = new Set(rows.map(r => r.userId));
 
       setStats({
@@ -65,14 +77,9 @@ const AdminOverview = () => {
       });
 
       const monthlyMap = {};
-
       rows.forEach(row => {
         if (!row.$createdAt) return;
-
-        const month = new Date(row.$createdAt).toLocaleString("default", {
-          month: "short",
-        });
-
+        const month = new Date(row.$createdAt).toLocaleString("default", { month: "short" });
         monthlyMap[month] = (monthlyMap[month] || 0) + 1;
       });
 
@@ -88,6 +95,7 @@ const AdminOverview = () => {
       console.error("Admin Overview error:", error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   }, []);
 
@@ -95,28 +103,67 @@ const AdminOverview = () => {
     fetchAdminStats();
   }, [fetchAdminStats]);
 
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchAdminStats();
+  };
+
   if (loading) {
-    return <p className="p-6">Loading admin overview...</p>;
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+        <p className="text-slate-500 font-bold animate-pulse uppercase tracking-widest text-xs">Initializing Admin Suite...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 space-y-8">
-      <h1 className="text-3xl font-bold">Admin Overview</h1>
+    <div className="space-y-10">
+      {/* Header Section */}
+      <div className="flex items-end justify-between">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-black uppercase tracking-wider rounded-md">Live Platform</span>
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+          </div>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Platform Command</h1>
+          <p className="text-slate-500 font-medium">Real-time ecosystem analytics & content management</p>
+        </motion.div>
 
-    
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Domains" value={stats.domains} />
-        <StatCard title="Total Topics" value={stats.topics} />
-        <StatCard title="Total Notes" value={stats.notes} />
-        <StatCard title="Total MCQs" value={stats.assessments} />
-        <StatCard title="Total Projects" value={stats.projects} />
-        <StatCard title="Active Learners" value={stats.activeUsers} />
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 shadow-sm hover:shadow-md transition-all"
+        >
+          <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+          Refresh Data
+        </motion.button>
       </div>
 
-      <UserGrowthChart data={userGrowth} />
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <StatCard title="Domains" value={stats.domains} icon={BookOpen} color="violet" />
+        <StatCard title="Topics" value={stats.topics} icon={Layers} color="blue" />
+        <StatCard title="Study Notes" value={stats.notes} icon={FileText} color="emerald" />
+        <StatCard title="Assessments" value={stats.assessments} icon={HelpCircle} color="amber" />
+        <StatCard title="Projects" value={stats.projects} icon={Rocket} color="rose" />
+        <StatCard title="Total Learners" value={stats.activeUsers} icon={Users} color="indigo" />
+      </div>
 
-      <AdminContentHealth/>
-
+      {/* Insights Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <UserGrowthChart data={userGrowth} />
+        </div>
+        <div>
+          <AdminContentHealth stats={stats} />
+        </div>
+      </div>
     </div>
   );
 };

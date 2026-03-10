@@ -186,16 +186,16 @@ const StudyMaterials = () => {
                         {steps.map((step, index) => (
                             <React.Fragment key={step.number}>
                                 <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${step.number === currentStep
-                                        ? "bg-blue-100 text-blue-700"
-                                        : step.number < currentStep
-                                            ? "bg-green-100 text-green-700"
-                                            : "bg-slate-100 text-slate-400"
+                                    ? "bg-blue-100 text-blue-700"
+                                    : step.number < currentStep
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-slate-100 text-slate-400"
                                     }`}>
                                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step.number === currentStep
-                                            ? "bg-blue-600 text-white"
-                                            : step.number < currentStep
-                                                ? "bg-green-600 text-white"
-                                                : "bg-slate-300 text-slate-500"
+                                        ? "bg-blue-600 text-white"
+                                        : step.number < currentStep
+                                            ? "bg-green-600 text-white"
+                                            : "bg-slate-300 text-slate-500"
                                         }`}>
                                         {step.number}
                                     </div>

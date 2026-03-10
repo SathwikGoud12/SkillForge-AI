@@ -6,7 +6,7 @@ const paths = [
     {
         name: 'Domains',
         icon: '🎯',
-        color: '#bc0e0eff',
+        color: '#f87171',
         size: 'small',
         orbitSize: 300,
         duration: 20,
@@ -16,7 +16,7 @@ const paths = [
     {
         name: 'Topics',
         icon: '📖',
-        color: '#ffffff',
+        color: '#a78bfa',
         size: 'medium',
         orbitSize: 480,
         duration: 30,
@@ -26,7 +26,7 @@ const paths = [
     {
         name: 'Projects',
         icon: '💼',
-        color: '#ffffff',
+        color: '#34d399',
         size: 'large',
         orbitSize: 660,
         duration: 40,
@@ -36,7 +36,7 @@ const paths = [
     {
         name: 'Assessments',
         icon: '📝',
-        color: '#ffffff',
+        color: '#fbbf24',
         size: 'medium',
         orbitSize: 840,
         duration: 50,
@@ -44,6 +44,7 @@ const paths = [
         link: '/user/assessments'
     }
 ];
+
 
 const SolarSystem = () => {
     const navigate = useNavigate();
@@ -115,8 +116,17 @@ const SolarSystem = () => {
 
             <div className="solar-system-content">
                 <div className="section-header">
+                    <div style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '8px',
+                        background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.35)',
+                        borderRadius: '50px', padding: '6px 16px', marginBottom: '16px'
+                    }}>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '2px', color: '#a78bfa', textTransform: 'uppercase' }}>
+                            ✦ Interactive Universe
+                        </span>
+                    </div>
                     <h2 className="section-title">Explore Your Universe</h2>
-                    <p className="section-subtitle">Navigate through endless possibilities with SkillForge</p>
+                    <p className="section-subtitle">Hover over any planet to discover what's inside. Click to navigate.</p>
                 </div>
 
                 <div className="solar-system" ref={solarSystemRef}>
