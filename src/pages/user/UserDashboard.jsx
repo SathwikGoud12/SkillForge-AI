@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { Toaster, toast } from "sonner";
@@ -291,7 +291,7 @@ const UserDashBoard = () => {
           <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full blur-3xl" style={{ background: "rgba(168,85,247,0.12)" }} />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pt-20 md:pt-10">
           <div className="flex items-center justify-between flex-wrap gap-6">
             {/* Left: greeting + info */}
             <div className="flex items-center gap-5">

@@ -46,6 +46,7 @@ export default function LandingPage() {
   const [counts, setCounts] = useState({ l: 0, t: 0, s: 0 });
   const statsRef = useRef(null);
   const [sv, setSv] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -97,18 +98,18 @@ export default function LandingPage() {
         borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
         transition: 'all 0.3s',
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           {/* Logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT2}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 20px ${ACCENT}50` }}>
-              <span style={{ color: 'white', fontWeight: 900, fontSize: 15 }}>SF</span>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT2}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 0 20px ${ACCENT}50`, flexShrink: 0 }}>
+              <span style={{ color: 'white', fontWeight: 900, fontSize: 14 }}>SF</span>
             </div>
-            <span style={{ fontWeight: 900, fontSize: 20, color: 'white', letterSpacing: '-0.5px' }}>SkillForge</span>
+            <span style={{ fontWeight: 900, fontSize: 18, color: 'white', letterSpacing: '-0.5px' }}>SkillForge</span>
             <span style={{ fontSize: 10, fontWeight: 700, color: ACCENT, background: `${ACCENT}15`, border: `1px solid ${ACCENT}40`, borderRadius: 50, padding: '2px 8px', letterSpacing: '0.08em' }}>AI</span>
           </div>
 
-          {/* Nav links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          {/* Desktop Nav links */}
+          <div className="sf-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             {[['features', 'Features'], ['domains', 'Domains'], ['how-it-works', 'How It Works'], ['testimonials', 'Reviews']].map(([id, label]) => (
               <button key={id} onClick={() => scrollTo(id)}
                 style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.65)', fontSize: 14, fontWeight: 600, padding: '8px 14px', borderRadius: 8, cursor: 'pointer', transition: 'color 0.2s' }}
@@ -118,18 +119,44 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* CTA */}
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button onClick={goLogin} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '9px 20px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 600, transition: 'all 0.2s' }}
+          {/* Desktop CTAs */}
+          <div className="sf-nav-ctas" style={{ display: 'flex', gap: 10 }}>
+            <button onClick={goLogin} style={{ background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '8px 18px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 600, transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}>
               Login
             </button>
-            <button onClick={goLogin} style={{ background: ACCENT, color: 'white', border: 'none', padding: '9px 24px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700, boxShadow: `0 4px 20px ${ACCENT}50`, transition: 'all 0.2s' }}
+            <button onClick={goLogin} style={{ background: ACCENT, color: 'white', border: 'none', padding: '8px 20px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700, boxShadow: `0 4px 20px ${ACCENT}50`, transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)'; }} onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}>
-              Get Started Free
+              Get Started
             </button>
           </div>
+
+          {/* Mobile hamburger */}
+          <button className="sf-hamburger" onClick={() => setMenuOpen(!menuOpen)}
+            style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', padding: 6 }}>
+            <div style={{ width: 24, display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {[0, 1, 2].map(i => <div key={i} style={{ height: 2, background: 'white', borderRadius: 2, transition: 'all 0.2s',
+                transform: menuOpen && i === 0 ? 'rotate(45deg) translate(5px,5px)' : menuOpen && i === 2 ? 'rotate(-45deg) translate(5px,-5px)' : 'none',
+                opacity: menuOpen && i === 1 ? 0 : 1 }} />)}
+            </div>
+          </button>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {menuOpen && (
+          <div style={{ background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {[['features','Features'],['domains','Domains'],['how-it-works','How It Works'],['testimonials','Reviews']].map(([id, label]) => (
+              <button key={id} onClick={() => { scrollTo(id); setMenuOpen(false); }}
+                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.75)', fontSize: 15, fontWeight: 600, padding: '10px 4px', textAlign: 'left', cursor: 'pointer' }}>
+                {label}
+              </button>
+            ))}
+            <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
+              <button onClick={goLogin} style={{ flex: 1, background: 'none', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '10px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 600 }}>Login</button>
+              <button onClick={goLogin} style={{ flex: 1, background: ACCENT, color: 'white', border: 'none', padding: '10px', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>Get Started</button>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ══ HERO ════════════════════════════════════════════════════ */}
@@ -179,7 +206,7 @@ export default function LandingPage() {
 
       {/* ══ STATS COUNT-UP BAR ══════════════════════════════════════ */}
       <section ref={statsRef} style={{ background: '#0d0d0d', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '44px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, textAlign: 'center' }}>
+        <div className="sf-stats-grid" style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, textAlign: 'center' }}>
           {[
             { v: `${counts.l.toLocaleString()}+`, l: 'Active Learners', icon: '👥' },
             { v: `${counts.t}+`, l: 'Topics & Domains', icon: '📚' },
@@ -264,7 +291,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div className="sf-features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
             {features.map((f, i) => (
               <div key={i}
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: 32, transition: 'all 0.3s', cursor: 'default' }}
@@ -289,7 +316,7 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
+          <div className="sf-how-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
             {[
               { step: '01', icon: '👤', title: 'Create Free Account', desc: 'Sign up in 30 seconds. No credit card. Just your email and you\'re in.', color: ACCENT },
               { step: '02', icon: '🎯', title: 'Pick Your Path', desc: 'Choose from 50+ curated skill paths — Web, AI, Cloud, DSA & more.', color: ACCENT2 },
@@ -321,7 +348,7 @@ export default function LandingPage() {
             <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.4)' }}>Real learners. Real careers. Real results.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div className="sf-testimonials-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
             {testimonials.map((t, i) => (
               <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, padding: 32, transition: 'all 0.3s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = `${ACCENT}40`; e.currentTarget.style.transform = 'translateY(-4px)'; }}
@@ -370,7 +397,7 @@ export default function LandingPage() {
       {/* ══ FOOTER ══════════════════════════════════════════════════ */}
       <footer style={{ background: '#000', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '64px 24px 32px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48, marginBottom: 52 }}>
+          <div className="sf-footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48, marginBottom: 52 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT2}, ${ACCENT})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -418,6 +445,19 @@ export default function LandingPage() {
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes glow { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @media (max-width: 768px) {
+          .sf-nav-links { display: none !important; }
+          .sf-nav-ctas { display: none !important; }
+          .sf-hamburger { display: flex !important; }
+          .sf-stats-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .sf-features-grid { grid-template-columns: 1fr !important; }
+          .sf-how-grid { grid-template-columns: 1fr !important; }
+          .sf-testimonials-grid { grid-template-columns: 1fr !important; }
+          .sf-footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+        }
+        @media (max-width: 480px) {
+          .sf-stats-grid { grid-template-columns: repeat(2,1fr) !important; gap: 12px !important; }
+        }
       `}</style>
     </div>
   );

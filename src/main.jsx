@@ -43,6 +43,9 @@ import AIAssistant from "./pages/user/AIAssistant";
 import StudyMaterials from "./pages/user/StudyMaterials";
 import SubjectDetail from "./pages/user/SubjectDetail";
 import DoubtClearingSession from "./pages/user/DoubtClearingSession";
+import OAuthCallback from "./pages/OAuthCallback";
+import UserGrowthPage from "./pages/admin/UserGrowthPage";
+import PlatformStatsPage from "./pages/admin/PlatformStatsPage";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/oauth/callback",
+        element: <OAuthCallback />,
       },
       {
         path: "/user",
@@ -114,7 +121,8 @@ const router = createBrowserRouter([
           { index: true, element: <Overview /> },
           { path: "adddomain", element: <AddDomainForm /> },
           { path: "alldomains", element: <AllDomains /> },
-
+          { path: "analytics", element: <UserGrowthPage /> },
+          { path: "stats", element: <PlatformStatsPage /> },
           { path: "edit-domain/:id", element: <EditDomain /> },
           { path: "domains/:domainId/topics", element: <TopicsList /> },
           { path: "domains/:domainId/add-topic", element: <AddTopic /> },
