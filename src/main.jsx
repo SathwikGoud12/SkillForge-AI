@@ -28,7 +28,7 @@ import AddAssessment from "./pages/admin/AddAssessment";
 import AddProject from "./pages/admin/AddProject";
 import AddDomainProject from "./pages/admin/AddDomainProject";
 import SeedData from "./pages/admin/SeedData";
-import UserDashBoard from "./pages/user/UserDashBoard";
+
 import UserDomains from "./pages/user/UserDomains";
 import UserLayout from "./pages/user/UserLayout";
 import UserTopics from "./pages/user/UserTopics";
@@ -46,6 +46,7 @@ import DoubtClearingSession from "./pages/user/DoubtClearingSession";
 import OAuthCallback from "./pages/OAuthCallback";
 import UserGrowthPage from "./pages/admin/UserGrowthPage";
 import PlatformStatsPage from "./pages/admin/PlatformStatsPage";
+import UserDashboard from "./pages/user/UserDashboard";
 
 const router = createBrowserRouter([
   {
@@ -83,7 +84,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
         children: [
-          { index: true, element: <UserDashBoard /> },
+          { index: true, element: <UserDashboard/> },
           { path: "setup", element: <UserSetup /> },
           { path: "domains", element: <UserDomains /> },
           { path: "seed-data", element: <SeedData /> },

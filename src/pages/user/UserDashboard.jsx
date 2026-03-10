@@ -34,7 +34,7 @@ const domainService = new DomainService();
 const topicService = new TopicServices();
 const progressService = new UserTopicProgressService();
 
-const UserDashBoard = () => {
+const UserDashboard = () => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -1068,4 +1068,4 @@ const UserDashBoard = () => {
   );
 };
 
-export default UserDashBoard;
+export default UserDashboard;
