@@ -1,4 +1,4 @@
-import { Account, ID } from "appwrite";
+import { Account, ID, OAuthProvider } from "appwrite";
 import appwriteClient from ".";
 
 class AppwriteAccount {
@@ -19,6 +19,17 @@ class AppwriteAccount {
     return await this.account.createEmailPasswordSession(
       email,
       password
+    );
+  }
+
+  createGoogleOAuthSession() {
+    const successUrl = `${window.location.origin}/oauth/callback`;
+    const failureUrl = `${window.location.origin}/login`;
+    // This redirects the browser to Google — no async needed
+    this.account.createOAuth2Session(
+      OAuthProvider.Google,
+      successUrl,
+      failureUrl
     );
   }
 
